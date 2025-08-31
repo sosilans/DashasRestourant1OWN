@@ -1,0 +1,188 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daria’s Italian Kitchen</title>
+    <meta name="description" content="Authentic Italian cuisine, handmade pastas, and warm hospitality in the heart of your city." />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <div class="brand">Daria’s Italian Kitchen</div>
+        <nav class="menu">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#menu">Menu</a>
+          <a href="#hours">Hours</a>
+          <a href="#reviews">Reviews</a>
+          <a class="btn" href="#reserve">Reserve</a>
+        </nav>
+        <button class="hamburger" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">☰</button>
+      </div>
+      <nav id="mobile-menu" class="mobile-menu" hidden>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#menu">Menu</a>
+        <a href="#hours">Hours</a>
+        <a href="#reviews">Reviews</a>
+        <a class="btn" href="#reserve">Reserve</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="hero">
+        <div class="hero-media">
+          <img src="./assets/design/hero.jpg" alt="Rustic Italian table with pasta and wine" onerror="this.style.display='none'" />
+        </div>
+        <div class="hero-content container">
+          <h1>Tradition on Every Plate</h1>
+          <p>Fresh handmade pasta, wood‑fired flavors, and family recipes refined over generations.</p>
+          <div class="actions">
+            <a href="#menu" class="btn primary">Explore Menu</a>
+            <a href="#reserve" class="btn ghost">Book a Table</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="about container section">
+        <div class="split">
+          <div>
+            <h2>Our Story</h2>
+            <p>Founded by Chef Daria, our kitchen celebrates the soul of Italian cooking: seasonal ingredients, simple techniques, and time‑honored hospitality. Every dish is made from scratch — from silky tagliatelle to slow‑simmered ragù.</p>
+            <ul class="checks">
+              <li>Handmade pastas daily</li>
+              <li>Locally sourced produce</li>
+              <li>Vegetarian and gluten‑free options</li>
+            </ul>
+          </div>
+          <div>
+            <img class="card" src="./assets/design/about.jpg" alt="Chef preparing fresh pasta" onerror="this.style.display='none'"/>
+          </div>
+        </div>
+      </section>
+
+      <section id="menu" class="menu section">
+        <div class="container">
+          <h2>Featured Menu</h2>
+          <div class="grid cards">
+            <article class="card">
+              <h3>Tagliatelle al Ragù</h3>
+              <p>Slow‑cooked beef ragù, Parmigiano Reggiano.</p>
+              <div class="price">$18</div>
+            </article>
+            <article class="card">
+              <h3>Margherita Pizza</h3>
+              <p>San Marzano tomatoes, fior di latte, basil.</p>
+              <div class="price">$16</div>
+            </article>
+            <article class="card">
+              <h3>Risotto ai Funghi</h3>
+              <p>Carnaroli rice, wild mushrooms, pecorino.</p>
+              <div class="price">$21</div>
+            </article>
+            <article class="card">
+              <h3>Tiramisu</h3>
+              <p>Espresso‑soaked savoiardi, mascarpone cream.</p>
+              <div class="price">$9</div>
+            </article>
+          </div>
+          <p class="note">Full seasonal menu available at the restaurant.</p>
+        </div>
+      </section>
+
+      <section id="hours" class="hours section">
+        <div class="container">
+          <h2>Hours & Location</h2>
+          <div class="split">
+            <div>
+              <ul class="hours-list">
+                <li><strong>Mon–Thu</strong> 12:00 – 22:00</li>
+                <li><strong>Fri–Sat</strong> 12:00 – 23:00</li>
+                <li><strong>Sun</strong> 12:00 – 21:00</li>
+              </ul>
+              <address>
+                123 Via Roma, Your City<br/>
+                <a href="tel:+10000000000">+1 (000) 000‑0000</a>
+              </address>
+            </div>
+            <div>
+              <iframe class="map" title="Map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=12.4922%2C41.8902%2C12.4962%2C41.8922&layer=mapnik"></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="reviews" class="reviews section">
+        <div class="container">
+          <h2>Guest Reviews</h2>
+          <div class="grid">
+            <blockquote class="card">“The best ragù I’ve had outside Bologna.” — Luca</blockquote>
+            <blockquote class="card">“Warm service and incredible tiramisu. A gem!” — Maria</blockquote>
+            <blockquote class="card">“Perfect dough, perfect char. Pizza is a must.” — James</blockquote>
+          </div>
+        </div>
+      </section>
+
+      <section id="reserve" class="reserve section">
+        <div class="container">
+          <h2>Reserve a Table</h2>
+          <form class="card form" onsubmit="event.preventDefault(); alert('Thanks! We will confirm shortly.');">
+            <div class="grid two">
+              <label>
+                <span>Name</span>
+                <input required type="text" name="name" />
+              </label>
+              <label>
+                <span>Phone</span>
+                <input required type="tel" name="phone" />
+              </label>
+              <label>
+                <span>Date</span>
+                <input required type="date" name="date" />
+              </label>
+              <label>
+                <span>Time</span>
+                <input required type="time" name="time" />
+              </label>
+              <label>
+                <span>Guests</span>
+                <input required type="number" name="guests" min="1" max="12" value="2" />
+              </label>
+            </div>
+            <button class="btn primary" type="submit">Request Booking</button>
+            <p class="note">For same‑day bookings, please call us.</p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="grid three">
+          <div>
+            <div class="brand">Daria’s Italian Kitchen</div>
+            <p class="muted">Authentic Italian cuisine crafted with love.</p>
+          </div>
+          <div>
+            <div class="footer-title">Visit</div>
+            <p>123 Via Roma<br/>Your City</p>
+          </div>
+          <div>
+            <div class="footer-title">Contact</div>
+            <p><a href="mailto:hello@dariaskitchen.example">hello@dariaskitchen.example</a><br/>
+               <a href="tel:+10000000000">+1 (000) 000‑0000</a></p>
+          </div>
+        </div>
+        <div class="legal">© <span id="year"></span> Daria’s Italian Kitchen</div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha256-lQ6xk+t3kmnLE1DseT8oW+fX3/8xQw2bNBh3D6JefwQ=" crossorigin="anonymous"></script>
+    <script src="./js/main.js" defer></script>
+  </body>
+</html>
