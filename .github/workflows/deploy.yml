@@ -1,0 +1,34 @@
+﻿name: Deploy to Cloudways
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Skip if not bootstrapped
+        run: |
+          if [ ! -f power_site/artisan ]; then
+            echo "power_site not present, skipping deploy." && exit 0
+          fi
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.CLOUDWAYS_SSH_KEY }}
+      - name: Known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
+        env:
+          HOST: ${{ secrets.CLOUDWAYS_SSH_HOST }}
+      - name: Upload repo (rsync)
+        run: |
+          rsync -az --delete ./ ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }}:~/app/current
+      - name: Remote deploy commands
+        run: |
+          ssh ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }} 'bash -s' < power_site/ci-bootstrap/deploy.sh || true
