@@ -82,7 +82,7 @@ jobs:
       - name: Add overlays (readme, env.example, deploy scripts, workflows)
         if: steps.check.outputs.already == 'false'
         run: |
-          rsync -av --ignore-existing ci-bootstrap/ power_site/
+          cp -a ci-bootstrap/. power_site/
 
       - name: Git commit generated app
         if: steps.check.outputs.already == 'false'
@@ -92,3 +92,4 @@ jobs:
           git add power_site
           git commit -m "chore: bootstrap Laravel app (power_site) with Breeze, Filament, Permission, Socialite"
           git push origin HEAD:${GITHUB_REF##*/}
+
