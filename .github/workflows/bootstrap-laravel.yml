@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 concurrency:
   group: bootstrap-laravel-${{ github.ref }}
   cancel-in-progress: false
@@ -115,5 +118,6 @@ jobs:
           git add power_site
           git commit -m "chore: bootstrap Laravel app (power_site) with Breeze, Filament, Permission, Socialite"
           git push origin HEAD:${GITHUB_REF##*/}
+
 
 
