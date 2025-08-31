@@ -36,12 +36,13 @@ jobs:
             eval "$(ssh-agent -s)"
             ssh-add - <<< "$SSH_KEY"
             rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
-            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" APP_DIR="$APP_DIR" SERVER_ENV="$SERVER_ENV" 'bash -s' < ci-bootstrap/deploy.sh
+            # Strip Windows CRLFs and pipe script to remote bash to avoid /usr/bin/env errors
+            sed -e 's/\r$//' ci-bootstrap/deploy.sh | ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" APP_DIR="$APP_DIR" SERVER_ENV="$SERVER_ENV" "bash -s"
           elif [ -n "$SSH_PASS" ]; then
             echo "Using password auth"
             sudo apt-get update -y && sudo apt-get install -y sshpass rsync
             sshpass -p "$SSH_PASS" rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
-            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" APP_DIR="$APP_DIR" SERVER_ENV="$SERVER_ENV" 'bash -s' < ci-bootstrap/deploy.sh
+            sed -e 's/\r$//' ci-bootstrap/deploy.sh | sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" APP_DIR="$APP_DIR" SERVER_ENV="$SERVER_ENV" "bash -s"
           else
             echo "No SSH credentials provided" >&2; exit 1; fi
 
