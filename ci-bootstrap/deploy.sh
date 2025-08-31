@@ -11,10 +11,14 @@ if [ ! -f power_site/artisan ]; then
   cd power_site
   COMPOSER_MEMORY_LIMIT=-1 composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier
   COMPOSER_MEMORY_LIMIT=-1 composer require laravel/breeze --dev
-  php artisan breeze:install blade
-  npm ci || npm i
-  npm run build
-  php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --force
+  php artisan breeze:install blade || true
+  if command -v npm >/dev/null 2>&1; then
+    npm ci || npm i || true
+    npm run build || true
+  else
+    echo "[deploy] npm not found; skipping Vite build"
+  fi
+  php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --force || true
   # Overlay from repo
   cp -a ../ci-bootstrap/. ./
 else
@@ -25,6 +29,10 @@ fi
 if [ -n "${SERVER_ENV:-}" ]; then
   echo "[deploy] Applying SERVER_ENV to .env"
   printf "%s\n" "$SERVER_ENV" > .env
+  # Generate key if empty
+  if ! grep -qE '^APP_KEY=.{10,}$' .env; then
+    php artisan key:generate || true
+  fi
 else
   [ -f .env ] || cp .env.example .env
   php artisan key:generate || true
