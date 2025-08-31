@@ -1,9 +1,9 @@
-﻿@extends(''layouts.app'')
-@section(''title'', ''Daria’s Italian Kitchen'')
-@section(''body'')
+@extends('layouts.app')
+@section('title', "Daria's Italian Kitchen")
+@section('body')
 <header class="site-header">
   <div class="container nav">
-    <div class="brand">Daria’s Italian Kitchen</div>
+    <div class="brand">Daria's Italian Kitchen</div>
     <nav class="menu">
       <a href="#home">Home</a>
       <a href="#about">About</a>
@@ -25,6 +25,7 @@
 </header>
 <main>
   <section id="home" class="hero">
+    <div class="hero-media" style="background:url('{{ asset('assets/img/hero.svg') }}') center/cover no-repeat;"></div>
     <div class="hero-content container">
       <h1>Tradition on Every Plate</h1>
       <p>Fresh handmade pasta, wood‑fired flavors, and family recipes refined over generations.</p>
@@ -46,7 +47,7 @@
         </ul>
       </div>
       <div>
-        <img class="card" src="{{ asset(''assets/design/src/assets/26fe5b5befab7ba240df6056ed60a2...'') }}" alt="Chef preparing fresh pasta" onerror="this.style.display=''none''"/>
+        <img class="card" src="{{ asset('assets/img/about.svg') }}" alt="Chef preparing fresh pasta"/>
       </div>
     </div>
   </section>
@@ -72,7 +73,7 @@
         <div>
           <ul class="hours-list">
             @foreach(($hours ?? []) as $h)
-            <li><strong>{{ [''Sun'',''Mon'',''Tue'',''Wed'',''Thu'',''Fri'',''Sat''][$h->day] }}</strong> {{ $h->open_time }} – {{ $h->close_time }}</li>
+            <li><strong>{{ ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][$h->day] }}</strong> {{ $h->open_time }} – {{ $h->close_time }}</li>
             @endforeach
           </ul>
           <address>
@@ -91,13 +92,13 @@
       <h2>Guest Reviews</h2>
       <div class="grid">
         @forelse(($reviews ?? []) as $r)
-          <blockquote class="card">“{{ $r->body }}” — {{ optional($r->user)->name ?? ''Guest'' }}</blockquote>
+          <blockquote class="card">“{{ $r->body }}” — {{ optional($r->user)->name ?? 'Guest' }}</blockquote>
         @empty
           <p class="note">No reviews yet.</p>
         @endforelse
       </div>
       @auth
-      <form class="card form" method="post" action="{{ route(''reviews.store'') }}">
+      <form class="card form" method="post" action="{{ route('reviews.store') }}">
         @csrf
         <div class="grid two">
           <label>
@@ -110,7 +111,7 @@
           </label>
         </div>
         <button class="btn primary" type="submit">Submit Review</button>
-        @if(session(''status''))<p class="note">{{ session(''status'') }}</p>@endif
+        @if(session('status'))<p class="note">{{ session('status') }}</p>@endif
       </form>
       @endauth
     </div>
@@ -120,7 +121,7 @@
   <div class="container">
     <div class="grid three">
       <div>
-        <div class="brand">Daria’s Italian Kitchen</div>
+        <div class="brand">Daria's Italian Kitchen</div>
         <p class="muted">Authentic Italian cuisine crafted with love.</p>
       </div>
       <div>
@@ -133,7 +134,7 @@
            <a href="tel:+10000000000">+1 (000) 000‑0000</a></p>
       </div>
     </div>
-    <div class="legal">© <span id="year"></span> Daria’s Italian Kitchen</div>
+    <div class="legal">© <span id="year"></span> Daria's Italian Kitchen</div>
   </div>
 </footer>
 @endsection
