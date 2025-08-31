@@ -1,0 +1,41 @@
+﻿name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skip if not bootstrapped
+        run: |
+          if [ ! -f power_site/artisan ]; then
+            echo "No power_site yet. Skipping."; exit 0; fi
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, intl, gd, pdo_sqlite
+          coverage: none
+      - name: Install Composer deps
+        working-directory: power_site
+        run: |
+          composer install --prefer-dist --no-interaction --no-progress
+      - name: Prepare env and sqlite DB
+        working-directory: power_site
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          mkdir -p database
+          touch database/database.sqlite
+          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=database\/database.sqlite/' .env
+      - name: Migrate
+        working-directory: power_site
+        run: php artisan migrate --force
+      - name: Tests
+        working-directory: power_site
+        run: ./vendor/bin/phpunit --testdox
