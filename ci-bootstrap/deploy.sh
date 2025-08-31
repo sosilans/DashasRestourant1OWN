@@ -58,3 +58,16 @@ if [ -d power_site/public ]; then
   echo "[deploy] Symlinked public_html -> power_site/public"
 fi
 
+
+# Verify symlink; if not a symlink, fallback to copy
+cd "$BASE_DIR"
+if [ ! -L public_html ] || [ ! -e public_html/index.php ]; then
+  echo "[deploy] Symlink not in place. Falling back to copy public/ into public_html"
+  rm -rf public_html/*
+  cp -a power_site/public/. public_html/
+  if [ -f public_html/index.php ]; then
+    sed -i "s#\../vendor/autoload.php#../power_site/vendor/autoload.php#" public_html/index.php || true
+    sed -i "s#\../bootstrap/app.php#../power_site/bootstrap/app.php#" public_html/index.php || true
+  fi
+  ls -la public_html | sed -n '1,120p'
+fi
