@@ -3,6 +3,8 @@ set -euo pipefail
 
 # APP_DIR points to .../applications/<id>/public_html
 APP_DIR="${APP_DIR:-$HOME/applications/unknown/public_html}"
+# Expand leading ~ in APP_DIR if present (from secrets)
+APP_DIR="${APP_DIR/#\~/$HOME}"
 BASE_DIR="$(dirname "$APP_DIR")"   # .../applications/<id>
 REPO_DIR="$APP_DIR"                 # rsync placed repo here
 
@@ -55,3 +57,4 @@ if [ -d power_site/public ]; then
   ln -s power_site/public public_html
   echo "[deploy] Symlinked public_html -> power_site/public"
 fi
+
