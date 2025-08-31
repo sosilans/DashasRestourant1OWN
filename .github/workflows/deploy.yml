@@ -12,12 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Skip if not bootstrapped
-        run: |
-          if [ ! -f power_site/artisan ]; then
-            echo "power_site not present, skipping deploy." && exit 0
-          fi
-
       - name: Prepare known_hosts
         run: |
           mkdir -p ~/.ssh
@@ -25,43 +19,28 @@ jobs:
         env:
           HOST: ${{ secrets.CLOUDWAYS_SSH_HOST }}
 
-      - name: Deploy using SSH key (if provided)
-        if: ${{ secrets.CLOUDWAYS_SSH_KEY != '' }}
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.CLOUDWAYS_SSH_HOST }}
-          username: ${{ secrets.CLOUDWAYS_SSH_USER }}
-          key: ${{ secrets.CLOUDWAYS_SSH_KEY }}
-          script_stop: true
-          script: |
-            mkdir -p ~/app/current
-      
-      - name: Rsync files via SSH key (if provided)
+      - name: Deploy via SSH key (if provided)
         if: ${{ secrets.CLOUDWAYS_SSH_KEY != '' }}
         run: |
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${{ secrets.CLOUDWAYS_SSH_KEY }}"
-          rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }}:~/app/current
+          rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }}:${{ secrets.CLOUDWAYS_APP_DIR }}/
 
-      - name: Deploy using password (fallback)
+      - name: Deploy via password (fallback)
         if: ${{ secrets.CLOUDWAYS_SSH_KEY == '' && secrets.CLOUDWAYS_SSH_PASS != '' }}
         run: |
           sudo apt-get update -y
           sudo apt-get install -y sshpass rsync
-          sshpass -p "$PASS" rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ $USER@$HOST:~/app/current
-        env:
-          HOST: ${{ secrets.CLOUDWAYS_SSH_HOST }}
-          USER: ${{ secrets.CLOUDWAYS_SSH_USER }}
-          PASS: ${{ secrets.CLOUDWAYS_SSH_PASS }}
+          sshpass -p "${{ secrets.CLOUDWAYS_SSH_PASS }}" rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }}:${{ secrets.CLOUDWAYS_APP_DIR }}/
 
-      - name: Remote deploy commands
-        if: ${{ always() }}
+      - name: Remote bootstrap and deploy
         run: |
-          set -e
           if [ -n "${{ secrets.CLOUDWAYS_SSH_KEY }}" ]; then
-            ssh -o StrictHostKeyChecking=no ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }} 'bash -s' < power_site/ci-bootstrap/deploy.sh || true
+            eval "$(ssh-agent -s)"; ssh-add - <<< "${{ secrets.CLOUDWAYS_SSH_KEY }}"
+            ssh -o StrictHostKeyChecking=no ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }} APP_DIR='${{ secrets.CLOUDWAYS_APP_DIR }}' SERVER_ENV='${{ secrets.SERVER_ENV }}' 'bash -s' < ci-bootstrap/deploy.sh
           elif [ -n "${{ secrets.CLOUDWAYS_SSH_PASS }}" ]; then
-            sshpass -p "${{ secrets.CLOUDWAYS_SSH_PASS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }} 'bash -s' < power_site/ci-bootstrap/deploy.sh || true
+            sudo apt-get update -y && sudo apt-get install -y sshpass
+            sshpass -p "${{ secrets.CLOUDWAYS_SSH_PASS }}" ssh -o StrictHostKeyChecking=no ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }} APP_DIR='${{ secrets.CLOUDWAYS_APP_DIR }}' SERVER_ENV='${{ secrets.SERVER_ENV }}' 'bash -s' < ci-bootstrap/deploy.sh
           else
             echo "No SSH credentials provided; skipping remote deploy step." && exit 0
           fi
