@@ -51,13 +51,13 @@ jobs:
       - name: Create Laravel project
         if: steps.check.outputs.already == 'false'
         run: |
-          composer create-project laravel/laravel power_site
+          COMPOSER_MEMORY_LIMIT=-1 composer create-project laravel/laravel power_site
 
       - name: Require core packages
         if: steps.check.outputs.already == 'false'
         working-directory: power_site
         run: |
-          composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier
+          COMPOSER_MEMORY_LIMIT=-1 composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier
           composer require laravel/breeze --dev
 
       - name: Install Breeze (Blade)
@@ -115,4 +115,5 @@ jobs:
           git add power_site
           git commit -m "chore: bootstrap Laravel app (power_site) with Breeze, Filament, Permission, Socialite"
           git push origin HEAD:${GITHUB_REF##*/}
+
 
