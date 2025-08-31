@@ -44,3 +44,5 @@ jobs:
             sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" APP_DIR="$APP_DIR" SERVER_ENV="$SERVER_ENV" 'bash -s' < ci-bootstrap/deploy.sh
           else
             echo "No SSH credentials provided" >&2; exit 1; fi
+
+
