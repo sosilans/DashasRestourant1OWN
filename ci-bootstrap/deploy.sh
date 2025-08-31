@@ -5,6 +5,14 @@ set -euo pipefail
 APP_DIR="${APP_DIR:-$HOME/applications/unknown/public_html}"
 # Expand leading ~ in APP_DIR if present (from secrets)
 APP_DIR="${APP_DIR/#\~/$HOME}"
+# Auto-detect application path if not provided or missing
+if [ ! -d "$APP_DIR" ] || [[ "$APP_DIR" == *"unknown"* ]]; then
+  for cand in "$HOME"/applications/*/public_html; do
+    if [ -d "$cand" ]; then APP_DIR="$cand"; break; fi
+  done
+fi
+echo "[deploy] HOME=$HOME"
+echo "[deploy] APP_DIR=$APP_DIR"
 BASE_DIR="$(dirname "$APP_DIR")"   # .../applications/<id>
 REPO_DIR="$APP_DIR"                 # rsync placed repo here
 
