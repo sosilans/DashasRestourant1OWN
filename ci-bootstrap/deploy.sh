@@ -13,7 +13,16 @@ if [ ! -d "$APP_DIR" ] || [[ "$APP_DIR" == *"unknown"* ]]; then
 fi
 echo "[deploy] HOME=$HOME"
 echo "[deploy] APP_DIR=$APP_DIR"
-BASE_DIR="$(dirname "$APP_DIR")"   # .../applications/<id>
+# Choose writable base dir for creating power_site
+PARENT_DIR="$(dirname "$APP_DIR")"
+BASE_DIR="$PARENT_DIR"
+if mkdir -p "$PARENT_DIR/.deploy_w" 2>/dev/null; then
+  rmdir "$PARENT_DIR/.deploy_w" 2>/dev/null || true
+else
+  BASE_DIR="$APP_DIR" # fallback to public_html
+fi
+echo "[deploy] BASE_DIR=$BASE_DIR"
+
 REPO_DIR="$APP_DIR"                 # rsync placed repo here
 
 cd "$BASE_DIR"
@@ -60,10 +69,12 @@ php artisan view:cache || true
 
 cd "$BASE_DIR"
 # Replace public_html with symlink to Laravel public
-if [ -d power_site/public ]; then
-  if [ -L public_html ]; then rm -f public_html; elif [ -d public_html ]; then mv public_html public_html.bak.$(date +%s) || true; fi
-  ln -s power_site/public public_html
-  echo "[deploy] Symlinked public_html -> power_site/public"
+if [ "$BASE_DIR" != "$APP_DIR" ]; then
+  if [ -d power_site/public ]; then
+    if [ -L public_html ]; then rm -f public_html; elif [ -d public_html ]; then mv public_html public_html.bak.$(date +%s) || true; fi
+    ln -s power_site/public public_html
+    echo "[deploy] Symlinked public_html -> power_site/public"
+  fi
 fi
 
 
