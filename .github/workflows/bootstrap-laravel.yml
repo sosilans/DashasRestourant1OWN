@@ -99,7 +99,7 @@ jobs:
         if: steps.check.outputs.already == 'false'
         working-directory: power_site
         run: |
-          php artisan migrate --force
+          php artisan migrate --force `n          php artisan db:seed --force 
 
       - name: Run tests
         if: steps.check.outputs.already == 'false'
@@ -115,3 +115,4 @@ jobs:
           git add power_site
           git commit -m "chore: bootstrap Laravel app (power_site) with Breeze, Filament, Permission, Socialite"
           git push origin HEAD:${GITHUB_REF##*/}
+
