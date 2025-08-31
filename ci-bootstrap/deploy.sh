@@ -1,12 +1,16 @@
 ﻿#!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="${APP_DIR:-$HOME/app/current}"
-cd "$APP_DIR"
+# APP_DIR points to .../applications/<id>/public_html
+APP_DIR="${APP_DIR:-$HOME/applications/unknown/public_html}"
+BASE_DIR="$(dirname "$APP_DIR")"   # .../applications/<id>
+REPO_DIR="$APP_DIR"                 # rsync placed repo here
 
-# Bootstrap Laravel if missing
+cd "$BASE_DIR"
+
+# Bootstrap Laravel one level above public_html
 if [ ! -f power_site/artisan ]; then
-  echo "[deploy] Creating Laravel app in $APP_DIR/power_site"
+  echo "[deploy] Creating Laravel app in $BASE_DIR/power_site"
   COMPOSER_MEMORY_LIMIT=-1 composer create-project laravel/laravel power_site
   cd power_site
   COMPOSER_MEMORY_LIMIT=-1 composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier
@@ -19,8 +23,8 @@ if [ ! -f power_site/artisan ]; then
     echo "[deploy] npm not found; skipping Vite build"
   fi
   php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --force || true
-  # Overlay from repo
-  cp -a ../ci-bootstrap/. ./
+  # Overlay from repo (which lives in public_html)
+  cp -a "$REPO_DIR/ci-bootstrap/." ./
 else
   cd power_site
 fi
@@ -29,7 +33,6 @@ fi
 if [ -n "${SERVER_ENV:-}" ]; then
   echo "[deploy] Applying SERVER_ENV to .env"
   printf "%s\n" "$SERVER_ENV" > .env
-  # Generate key if empty
   if ! grep -qE '^APP_KEY=.{10,}$' .env; then
     php artisan key:generate || true
   fi
@@ -45,9 +48,10 @@ php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
-cd "$APP_DIR"
-# Symlink public_html to Laravel public
+cd "$BASE_DIR"
+# Replace public_html with symlink to Laravel public
 if [ -d power_site/public ]; then
   if [ -L public_html ]; then rm -f public_html; elif [ -d public_html ]; then mv public_html public_html.bak.$(date +%s) || true; fi
   ln -s power_site/public public_html
+  echo "[deploy] Symlinked public_html -> power_site/public"
 fi
