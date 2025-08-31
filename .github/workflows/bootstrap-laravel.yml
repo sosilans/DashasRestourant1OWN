@@ -51,12 +51,15 @@ jobs:
           php composer-setup.php --install-dir=/usr/local/bin --filename=composer
           rm composer-setup.php
 
-      - name: Create Laravel project
+      
+      - name: Git commit Laravel skeleton (early)
         if: steps.check.outputs.already == 'false'
         run: |
-          COMPOSER_MEMORY_LIMIT=-1 composer create-project laravel/laravel power_site
-
-      - name: Require core packages
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add power_site
+          git commit -m "chore: add Laravel skeleton (power_site)"
+          git push origin HEAD:${GITHUB_REF##*/}      - name: Require core packages
         if: steps.check.outputs.already == 'false'
         working-directory: power_site
         run: |
@@ -118,6 +121,7 @@ jobs:
           git add power_site
           git commit -m "chore: bootstrap Laravel app (power_site) with Breeze, Filament, Permission, Socialite"
           git push origin HEAD:${GITHUB_REF##*/}
+
 
 
 
