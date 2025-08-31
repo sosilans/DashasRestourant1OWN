@@ -84,6 +84,29 @@ jobs:
         run: |
           cp -a ci-bootstrap/. power_site/
 
+            - name: Prepare app key and test DB
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php -r "file_exists('database') || mkdir('database');"
+          php -r "file_put_contents('database/database.sqlite','');"
+          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=database\/database.sqlite/' .env
+
+      - name: Run migrations
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          php artisan migrate --force
+
+      - name: Run tests
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          ./vendor/bin/phpunit --testdox
+
       - name: Git commit generated app
         if: steps.check.outputs.already == 'false'
         run: |
@@ -92,4 +115,3 @@ jobs:
           git add power_site
           git commit -m "chore: bootstrap Laravel app (power_site) with Breeze, Filament, Permission, Socialite"
           git push origin HEAD:${GITHUB_REF##*/}
-
