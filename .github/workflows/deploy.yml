@@ -42,7 +42,7 @@ jobs:
             rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
             
             echo "🔧 Running deployment script on server..."
-            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-debug.sh && ./ci-bootstrap/deploy-debug.sh"
+            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-fixed.sh && ./ci-bootstrap/deploy-fixed.sh"
             
           elif [ -n "$SSH_PASS" ]; then
             echo "🔐 Using password authentication"
@@ -52,7 +52,7 @@ jobs:
             sshpass -p "$SSH_PASS" rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
             
             echo "🔧 Running deployment script on server..."
-            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-debug.sh && ./ci-bootstrap/deploy-debug.sh"
+            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-fixed.sh && ./ci-bootstrap/deploy-fixed.sh"
             
           else
             echo "❌ No SSH credentials provided" >&2; exit 1; fi

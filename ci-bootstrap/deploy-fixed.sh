@@ -1,16 +1,11 @@
 #!/bin/bash
 
-# Debug deployment script for Dar'ya's Kitchen
-# This script provides detailed diagnostics and error handling
+# Fixed deployment script for Dar'ya's Kitchen
+# This script ensures proper Laravel deployment with error handling
 
 set -euo pipefail
 
-echo "🔍 DEBUG DEPLOYMENT SCRIPT"
-echo "=========================="
-echo "Timestamp: $(date)"
-echo "User: $(whoami)"
-echo "Working directory: $(pwd)"
-echo ""
+echo "🚀 Starting FIXED deployment..."
 
 # Configuration
 APP_PATH="${SERVER_PATH:-~/applications/ygrswjnpmw}"
@@ -22,69 +17,53 @@ echo "  DEPLOY_BRANCH: $DEPLOY_BRANCH"
 echo "  Current directory: $(pwd)"
 echo ""
 
-# Check if we're in the right directory
-echo "📁 Directory check:"
-if [ -d "$APP_PATH" ]; then
-    echo "✅ App directory exists: $APP_PATH"
-    cd "$APP_PATH"
-    echo "✅ Changed to app directory: $(pwd)"
-elif [ "$(pwd)" = "/home/master/applications/ygrswjnpmw/public_html" ]; then
-    echo "✅ Already in public_html directory: $(pwd)"
-    echo "✅ Moving to parent directory..."
+# Navigate to the application directory
+echo "📁 Current directory: $(pwd)"
+
+# Check if we're already in the right place
+if [ "$(pwd)" = "/home/master/applications/ygrswjnpmw/public_html" ]; then
+    echo "✅ Already in public_html, moving to parent directory..."
     cd ..
     echo "✅ Now in: $(pwd)"
+elif [ -d "~/applications/ygrswjnpmw" ]; then
+    echo "✅ Navigating to application directory..."
+    cd ~/applications/ygrswjnpmw
+    echo "✅ Now in: $(pwd)"
 else
-    echo "❌ App directory not found: $APP_PATH"
-    echo "Current directory: $(pwd)"
-    echo "Available directories:"
-    ls -la ~/applications/ 2>/dev/null || echo "No applications directory found"
-    echo "Trying to work from current directory..."
+    echo "⚠️ Application directory not found, working from current directory: $(pwd)"
 fi
 
-echo ""
-
-# Check disk space
-echo "💾 Disk space check:"
-df -h . | head -2
-echo ""
-
-# Check if power_site exists
-echo "🔍 Laravel app check:"
-if [ -d "power_site" ]; then
-    echo "✅ power_site directory exists"
-    if [ -f "power_site/artisan" ]; then
-        echo "✅ Laravel artisan found"
-    else
-        echo "❌ Laravel artisan not found"
-    fi
-elif [ -d "public_html/power_site" ]; then
-    echo "✅ power_site directory exists in public_html"
-    if [ -f "public_html/power_site/artisan" ]; then
-        echo "✅ Laravel artisan found in public_html"
-    else
-        echo "❌ Laravel artisan not found in public_html"
-    fi
-else
-    echo "❌ power_site directory not found"
-    echo "Creating Laravel application in public_html..."
+# Check if power_site exists, if not, create Laravel app
+if [ ! -d "power_site" ] && [ ! -d "public_html/power_site" ]; then
+    echo "❌ power_site not found. Creating Laravel application..."
     
-    # Check if composer is available
-    if ! command -v composer >/dev/null 2>&1; then
-        echo "❌ Composer not found. Installing..."
-        curl -sS https://getcomposer.org/installer | php
-        sudo mv composer.phar /usr/local/bin/composer
-    fi
-    
-    # Create Laravel app in public_html where we have write permissions
+    # Always create in public_html where we have write permissions
     echo "Creating Laravel project in public_html..."
     cd public_html
     composer create-project laravel/laravel power_site --prefer-dist --no-interaction || {
-        echo "❌ Failed to create Laravel project in public_html"
+        echo "❌ Failed to create Laravel project"
         exit 1
     }
     cd ..
     
     echo "✅ Laravel application created in public_html/power_site"
+    
+    # Install additional packages
+    echo "📦 Installing additional packages..."
+    cd public_html/power_site
+    composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier || echo "⚠️ Some packages failed to install"
+    composer require laravel/breeze --dev || echo "⚠️ Breeze installation failed"
+    
+    # Install Node dependencies and build
+    echo "🔨 Building frontend assets..."
+    npm install || echo "⚠️ npm install failed"
+    npm run build || echo "⚠️ npm build failed"
+    
+    # Publish permission migrations
+    echo "📋 Publishing permission migrations..."
+    php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" || echo "⚠️ Permission migrations failed"
+    
+    cd ../..
 fi
 
 echo ""
@@ -93,8 +72,6 @@ echo ""
 echo "🌐 Public HTML check:"
 if [ -d "public_html" ]; then
     echo "✅ public_html directory exists"
-    echo "Contents:"
-    ls -la public_html/ | head -5
 else
     echo "❌ public_html directory not found"
     echo "Creating public_html directory..."
@@ -218,6 +195,27 @@ chmod -R 755 public_html || echo "⚠️ Permission setting failed"
 chmod 644 public_html/*.html 2>/dev/null || echo "⚠️ HTML permission setting failed"
 chmod 644 public_html/*.php 2>/dev/null || echo "⚠️ PHP permission setting failed"
 echo "✅ Permissions set"
+
+echo ""
+
+# Clear caches
+echo "🧹 Clearing caches..."
+if [ -d "power_site" ]; then
+    cd power_site
+    php artisan config:clear || true
+    php artisan cache:clear || true
+    php artisan route:clear || true
+    php artisan view:clear || true
+    cd ..
+elif [ -d "public_html/power_site" ]; then
+    cd public_html/power_site
+    php artisan config:clear || true
+    php artisan cache:clear || true
+    php artisan route:clear || true
+    php artisan view:clear || true
+    cd ../..
+fi
+echo "✅ Caches cleared"
 
 echo ""
 
