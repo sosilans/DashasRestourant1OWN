@@ -64,3 +64,10 @@ a{color:inherit;text-decoration:none}
 
 
 
+/* Steam animation over hero */
+.steam{position:absolute;inset:0;pointer-events:none}
+.steam span{position:absolute;bottom:10%;left:50%;width:8px;height:40px;background:linear-gradient(#ffffff99,#ffffff00);border-radius:999px;filter:blur(1px);animation:rise 6s infinite ease-in;opacity:.6}
+.steam span:nth-child(1){left:48%;animation-delay:.5s}
+.steam span:nth-child(2){left:52%;animation-delay:1.2s}
+.steam span:nth-child(3){left:50%;animation-delay:2.1s}
+@keyframes rise{0%{transform:translate(-50%,0) scale(.8);opacity:.0}20%{opacity:.8}100%{transform:translate(-50%,-120px) scale(1.1);opacity:0}}
