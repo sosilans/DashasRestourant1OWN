@@ -29,22 +29,48 @@ jobs:
         run: |
           set -e
           if [ -z "$SSH_HOST" ] || [ -z "$SSH_USER" ] || [ -z "$APP_DIR" ]; then
-            echo "Missing SSH_HOST/SSH_USER/APP_DIR secrets" >&2; exit 1; fi
+            echo "❌ Missing SSH_HOST/SSH_USER/APP_DIR secrets" >&2; exit 1; fi
 
+          echo "🚀 Starting deployment to $SSH_HOST:$APP_DIR"
+          
           if [ -n "$SSH_KEY" ]; then
-            echo "Using SSH key auth"
+            echo "🔑 Using SSH key authentication"
             eval "$(ssh-agent -s)"
             ssh-add - <<< "$SSH_KEY"
+            
+            echo "📤 Syncing files to server..."
             rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
-            # Run deployment script directly on server
+            
+            echo "🔧 Running deployment script on server..."
             ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy.sh && ./ci-bootstrap/deploy.sh"
+            
           elif [ -n "$SSH_PASS" ]; then
-            echo "Using password auth"
+            echo "🔐 Using password authentication"
             sudo apt-get update -y && sudo apt-get install -y sshpass rsync
+            
+            echo "📤 Syncing files to server..."
             sshpass -p "$SSH_PASS" rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
-            # Run deployment script directly on server
+            
+            echo "🔧 Running deployment script on server..."
             sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy.sh && ./ci-bootstrap/deploy.sh"
+            
           else
-            echo "No SSH credentials provided" >&2; exit 1; fi
+            echo "❌ No SSH credentials provided" >&2; exit 1; fi
+          
+          echo "✅ Deployment completed successfully!"
+
+      - name: Health Check
+        shell: bash
+        run: |
+          echo "🏥 Performing health check..."
+          if [ -n "$SSH_HOST" ]; then
+            if [ -n "$SSH_KEY" ]; then
+              eval "$(ssh-agent -s)"
+              ssh-add - <<< "$SSH_KEY"
+              ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "curl -f -s https://phpstack-1511050-5820602.cloudwaysapps.com/ || echo 'Health check failed'"
+            elif [ -n "$SSH_PASS" ]; then
+              sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "curl -f -s https://phpstack-1511050-5820602.cloudwaysapps.com/ || echo 'Health check failed'"
+            fi
+          fi
 
 

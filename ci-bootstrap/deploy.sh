@@ -12,13 +12,42 @@ cd ~/applications/ygrswjnpmw
 
 echo "📁 Current directory: $(pwd)"
 
+# Check if power_site exists, if not, create Laravel app
+if [ ! -d "power_site" ]; then
+    echo "❌ power_site not found. Creating Laravel application..."
+    
+    # Create Laravel app
+    composer create-project laravel/laravel power_site --prefer-dist --no-interaction
+    
+    # Install required packages
+    cd power_site
+    composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier
+    composer require laravel/breeze --dev
+    
+    # Install Breeze
+    php artisan breeze:install blade
+    
+    # Install Node dependencies and build
+    npm ci || npm i
+    npm run build
+    
+    # Publish permission migrations
+    php artisan vendor:publish --provider="Spatie\\Permission\\PermissionServiceProvider"
+    
+    cd ..
+    
+    echo "✅ Laravel application created successfully"
+fi
+
 # Skip git pull since we're deploying from GitHub Actions
 echo "⬇️  Skipping git pull - deploying from GitHub Actions..."
 
 # Ensure power_site is up to date
 echo "🔄 Updating power_site..."
-# Copy files from current directory (repo root)
-cp -a ./* power_site/ 2>/dev/null || echo "Some files copied"
+# Copy overlay files from ci-bootstrap to power_site
+if [ -d "ci-bootstrap" ]; then
+    cp -a ci-bootstrap/* power_site/ 2>/dev/null || echo "Some overlay files copied"
+fi
 
 # Force refresh public_html from power_site/public
 echo "🌐 Updating public_html..."
