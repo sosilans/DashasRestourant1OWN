@@ -46,7 +46,13 @@ if [ ! -f power_site/artisan ]; then
   cp -a "$REPO_DIR/ci-bootstrap/." ./
 else
   cd power_site
-fi
+  echo "[deploy] Refresh overlay"
+  cp -a ../ci-bootstrap/public/css/. ./public/css/ 2>/dev/null || true
+  cp -a ../ci-bootstrap/public/js/. ./public/js/ 2>/dev/null || true
+  cp -a ../ci-bootstrap/public/assets/. ./public/assets/ 2>/dev/null || true
+  cp -a ../ci-bootstrap/resources/views/. ./resources/views/ 2>/dev/null || true
+  cp -a ../ci-bootstrap/app/Http/Controllers/. ./app/Http/Controllers/ 2>/dev/null || true
+  cp -a ../ci-bootstrap/routes/web.php ./routes/web.php 2>/dev/null || truefi
 
 # Prepare env
 if [ -n "${SERVER_ENV:-}" ]; then
@@ -90,3 +96,4 @@ if [ ! -L public_html ] || [ ! -e public_html/index.php ]; then
   fi
   ls -la public_html | sed -n '1,120p'
 fi
+
