@@ -16,11 +16,32 @@ echo "📁 Current directory: $(pwd)"
 if [ ! -d "power_site" ]; then
     echo "❌ power_site not found. Creating Laravel application..."
     
-    # Create Laravel app
-    composer create-project laravel/laravel power_site --prefer-dist --no-interaction
+    # Try to create in current directory first
+    if composer create-project laravel/laravel power_site --prefer-dist --no-interaction 2>/dev/null; then
+        echo "✅ Laravel created in current directory"
+    else
+        echo "⚠️ Permission denied in current directory. Trying in public_html..."
+        # Create in public_html directory where we have write permissions
+        cd public_html
+        if composer create-project laravel/laravel power_site --prefer-dist --no-interaction 2>/dev/null; then
+            echo "✅ Laravel created in public_html/power_site"
+            cd ..
+        else
+            echo "❌ Failed to create Laravel application"
+            exit 1
+        fi
+    fi
     
     # Install required packages
-    cd power_site
+    if [ -d "power_site" ]; then
+        cd power_site
+    elif [ -d "public_html/power_site" ]; then
+        cd public_html/power_site
+    else
+        echo "❌ Laravel directory not found"
+        exit 1
+    fi
+    
     composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier
     composer require laravel/breeze --dev
     
@@ -34,7 +55,7 @@ if [ ! -d "power_site" ]; then
     # Publish permission migrations
     php artisan vendor:publish --provider="Spatie\\Permission\\PermissionServiceProvider"
     
-    cd ..
+    cd ../..
     
     echo "✅ Laravel application created successfully"
 fi
@@ -58,7 +79,16 @@ fi
 
 # Copy all files from power_site/public to public_html
 echo "Copying files to public_html..."
-cp -a power_site/public/* public_html/
+if [ -d "power_site/public" ]; then
+    echo "Copying from power_site/public..."
+    cp -a power_site/public/* public_html/
+elif [ -d "public_html/power_site/public" ]; then
+    echo "Copying from public_html/power_site/public..."
+    cp -a public_html/power_site/public/* public_html/
+else
+    echo "❌ No Laravel public directory found"
+    exit 1
+fi
 
 # Force refresh CSS and JS directories with touch
 echo "🎨 Force refreshing CSS and JS..."
