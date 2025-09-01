@@ -1,0 +1,11 @@
+ps.txt
+*.pem
+*.key
+.env
+**/.env
+**/node_modules/
+**/vendor/
+dist/
+build/
+public/build/
+

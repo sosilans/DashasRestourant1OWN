@@ -1,0 +1,262 @@
+🔧 GLOBAL CODEX PROMPT — Powerful Site from Figma → PHP (Cloudways) + GitHub CI/CD
+
+Role: You are my senior full-stack engineer and solution architect.
+Goal: Build a production-ready one-page (or few pages) website from a Figma template, preserving animations, with a PHP backend optimized for Cloudways, GitHub-based workflow, and a modular architecture that allows future feature upgrades (admin panel, site builder controls, user auth with roles, reviews, chat module, security hardening).
+
+0) Constraints & Principles
+
+Keep code clean, modular, documented.
+
+Use env-driven config. Zero secrets in repo.
+
+Preserve Figma animations (replicate with CSS/GSAP/Lottie as needed).
+
+Keep performance (lazy-loading images, minify, cache headers).
+
+Keep accessibility (semantic HTML, focus states, aria-*).
+
+Everything must be deployable on Cloudways PHP/Laravel stack.
+
+1) Tech Stack
+
+Backend: PHP Laravel 11 (with Vite).
+
+Frontend: Blade + TailwindCSS + Alpine.js (or small vanilla JS). For advanced animations: GSAP and Lottie-web (only if needed).
+
+DB: MySQL/MariaDB (Cloudways default).
+
+Auth: Laravel Breeze (Email/Password) + Socialite (Google, Apple; stub routes + env placeholders).
+
+Roles/Permissions: spatie/laravel-permission.
+
+Reviews: own CRUD module (approved/pending).
+
+Admin UI: FilamentPHP (or Laravel Nova alternative) — pick Filament for OSS.
+
+Security: Laravel middlewares, rate-limiting, CSRF, validation, content sanitization, headers via helmet-equivalent (spatie/laravel-csp or secure headers).
+
+Animations: CSS keyframes + GSAP; for vector/JSON animations use Lottie if present in Figma export.
+
+Chat slot (optional): provide abstraction/interface to plug chat providers later.
+
+2) Design Sources (Figma → Assets)
+
+Local design folder (Windows path):
+C:\Users\pursh\OneDrive\Desktop\AIstuff\websites\4
+
+Tasks:
+
+Detect/export assets (SVG/PNG/WEBP), fonts, spacing, colors, shadows.
+
+Map Figma components → Blade partials (resources/views/components/*).
+
+Recreate prototype transitions/animations (CSS/GSAP/Lottie).
+
+Keep typography scale consistent (use Tailwind config).
+
+3) Project Setup & Repo
+
+Initialize Laravel 11 project in a new folder: power_site
+
+Add README with setup, scripts, deploy steps.
+
+Init Git; create GitHub repo; push.
+
+Provide .gitignore, .editorconfig, phpcs/pint config.
+
+4) Folder Structure (high-level)
+app/
+  Http/Controllers/
+  Models/
+  Policies/
+  Services/
+  View/Components/
+bootstrap/
+config/
+database/
+  migrations/
+  seeders/
+public/
+  assets/ (images, lottie json)
+resources/
+  css/  js/
+  views/
+    layouts/app.blade.php
+    pages/home.blade.php
+    components/
+      navbar.blade.php
+      hero.blade.php
+      about.blade.php
+      menu.blade.php
+      hours.blade.php
+      reviews.blade.php
+      footer.blade.php
+routes/web.php
+
+5) Features to Implement (MVP+)
+
+Public pages
+
+Home (sections: Hero, About, Menu, Hours, Reviews).
+
+Optional extra pages (Contact/Privacy) as simple Blade pages.
+
+Auth
+
+Breeze email/password (register, login, remember-me, reset).
+
+Socialite stubs for Google/Apple (env placeholders + routes guarded behind feature flag).
+
+Roles
+
+admin, user via spatie/laravel-permission. Seed default admin.
+
+Admin Panel (Filament)
+
+Login-protected at /admin.
+
+Manage: site texts/blocks/images (basic “builder”: reorder blocks, toggle visibility, edit copy, upload images), menu items (name/desc/price/emoji), business hours, reviews (approve/delete), users & roles.
+
+Audit log of changes.
+
+Reviews
+
+Only authenticated users can submit; status = pending until approved by admin.
+
+Reviews keep user’s locale (do not auto-translate).
+
+Animations
+
+Mirror Figma prototype transitions:
+
+Prefer CSS for simple fades/slides.
+
+Use GSAP for scroll/entrance effects.
+
+If Figma uses Lottie, place JSON in public/assets/lottie/* and render with lottie-web.
+
+Provide a single resources/js/animations.js that initializes all effects after DOMReady.
+
+Internationalization (optional hook)
+
+Prepare simple i18n structure (en/es/it) using lang/ JSON files; navbar switcher changes UI only (not reviews).
+
+Security
+
+CSRF on forms, input validation (Form Requests), XSS sanitization (HTMLPurifier on user content), rate limits on auth & reviews, secure headers middleware, passwords hashed (argon2id).
+
+Environment variables: DB creds, APP_KEY, OAUTH keys, MAIL settings.
+
+Scalability Hooks
+
+Service container interfaces for: storage (local/S3), cache, mail, chat provider, payment provider (future Stripe).
+
+All secrets from .env.
+
+6) Database Schema (migrations)
+
+users (name, email, password, provider, provider_id, locale).
+
+reviews (user_id, body:text, rating:int, status:enum, created_at).
+
+site_blocks (key, enabled:boolean, sort:int, json_content).
+
+menu_items (name, description, price_decimal, emoji, sort).
+
+business_hours (day:int, open_time, close_time, note).
+
+Spatie roles/permissions tables.
+
+Seeders:
+
+Admin user (email from .env ADMIN_EMAIL).
+
+Default blocks (about/menu/hours/reviews).
+
+Example menu items & hours.
+
+7) Frontend Details
+
+Tailwind config with brand palette from Figma (primary navy, cream, tomato red, basil green).
+
+Fixed top navbar, smooth scroll to sections.
+
+Responsive: mobile-first (≤640px), tablet, desktop.
+
+Image optimization (WEBP, lazy).
+
+Reviews UI: cards with name + text; submit form if logged in; else CTA to login.
+
+8) GitHub Integration & CI/CD
+
+Create GitHub Actions workflow:
+
+jobs: lint-test-build (phpunit, pint), deploy (on push to main).
+
+deploy uses Cloudways Git deployment (or SFTP/SSH). Ask for env secrets: CLOUDWAYS_SSH_HOST, CLOUDWAYS_SSH_USER, CLOUDWAYS_SSH_KEY, APP_ENV etc.
+
+Provide deploy.sh for Cloudways (composer install, migrate, cache:clear, config:cache, vite build).
+
+9) Cloudways Deployment
+
+Target: PHP/Laravel app on Cloudways.
+
+Steps to automate:
+
+Add .env.example with all keys.
+
+In README: how to set APP_KEY, DB creds, mail, OAuth.
+
+Provide artisan commands in deploy script: migrate --force, db:seed --force (first deploy).
+
+Set public/ as webroot.
+
+Configure QUEUE_CONNECTION=database (prepare for jobs later).
+
+10) Tasks for You (execute now)
+
+Scaffold project (Laravel 11) and push to new GitHub repo.
+
+Install packages: Breeze, Socialite, spatie/permission, Filament, HTMLPurifier, GSAP, lottie-web.
+
+Parse Figma assets from C:\Users\pursh\OneDrive\Desktop\AIstuff\websites\4 and place into public/assets (keep subfolders).
+
+Build Blade components according to Figma sections; wire responsive layout.
+
+Recreate animations (CSS/GSAP/Lottie) to match Figma prototype.
+
+Implement auth + roles + reviews (with approval workflow).
+
+Admin panel (Filament): content editor (basic block-builder), menu editor, hours, reviews moderation, users & roles.
+
+Add i18n hooks (en/es/it files; reviews are not auto-translated).
+
+Security hardening middlewares and validation.
+
+Create GitHub Actions and deploy script for Cloudways.
+
+Write README with setup + Cloudways how-to.
+
+Provide a final checklist and run through it.
+
+11) Acceptance Checklist (verify before finishing)
+
+ Home renders pixel-close to Figma; animations preserved.
+
+ Lighthouse: Performance ≥ 90, Accessibility ≥ 90.
+
+ Auth works (email/password), remember-me; Socialite routes ready (env-guarded).
+
+ Roles: admin sees /admin (Filament), user doesn’t.
+
+ Reviews: only logged-in can submit; admin approval flow works.
+
+ Admin can edit texts/images, toggle/reorder blocks, update menu & hours.
+
+ .env used for secrets; no creds in repo.
+
+ GitHub Actions green; deploy to Cloudways succeeds.
+
+ README includes step-by-step Cloudways setup.
+
+Now start executing. Ask me only if a file is missing or ambiguous. Otherwise proceed end-to-end.
