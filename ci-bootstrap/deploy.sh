@@ -56,12 +56,20 @@ else
   echo "[deploy] Refresh overlay"
   # When power_site is created in the parent of APP_DIR, ../ci-bootstrap does not exist.
   # Always copy from the checked-out repo at $REPO_DIR.
-  cp -a "$REPO_DIR/ci-bootstrap/public/css/." ./public/css/ 2>/dev/null || true
-  cp -a "$REPO_DIR/ci-bootstrap/public/js/." ./public/js/ 2>/dev/null || true
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a --delete "$REPO_DIR/ci-bootstrap/public/css/" ./public/css/
+    rsync -a --delete "$REPO_DIR/ci-bootstrap/public/js/" ./public/js/
+  else
+    cp -a "$REPO_DIR/ci-bootstrap/public/css/." ./public/css/ 2>/dev/null || true
+    cp -a "$REPO_DIR/ci-bootstrap/public/js/." ./public/js/ 2>/dev/null || true
+  fi
   cp -a "$REPO_DIR/ci-bootstrap/public/assets/." ./public/assets/ 2>/dev/null || true
   cp -a "$REPO_DIR/ci-bootstrap/resources/views/." ./resources/views/ 2>/dev/null || true
   cp -a "$REPO_DIR/ci-bootstrap/app/Http/Controllers/." ./app/Http/Controllers/ 2>/dev/null || true
   cp -a "$REPO_DIR/ci-bootstrap/routes/web.php" ./routes/web.php 2>/dev/null || true
+
+  # Ensure cache-busting via mtime regardless of preserved timestamps
+  touch ./public/js/main.js ./public/css/styles.css 2>/dev/null || true
 fi
 
 # Prepare env
