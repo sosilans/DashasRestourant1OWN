@@ -171,3 +171,4 @@ echo ""
 # Create status file
 echo "Simple deployment completed at: $(date)" > public_html/deploy-status.txt
 echo "✅ Status file created"
+

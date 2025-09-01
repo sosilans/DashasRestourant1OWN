@@ -153,3 +153,4 @@ if ($allTestsPassed) {
 
 Write-Host ""
 Write-Host "Test completed at: $(Get-Date)" -ForegroundColor Gray
+

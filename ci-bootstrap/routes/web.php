@@ -2,22 +2,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReviewController;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Locale switcher (EN/IT/ES)
-Route::get('/locale/{locale}', function ($locale) {
-    $allowed = ['en','it','es'];
-    if (in_array($locale, $allowed, true)) {
-        Session::put('locale', $locale);
-    }
-    return back();
-})->name('locale.set');
-
 Route::middleware('auth')->group(function() {
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    // Require login, then bounce back to the review form on home
+    Route::get('/leave-review', function () {
+        return redirect(route('home').'#review-form');
+    })->name('reviews.cta');
     // Admin panel (simple)
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [\App\Http\Controllers\Admin\DashboardController::class,'index'])->name('dashboard');

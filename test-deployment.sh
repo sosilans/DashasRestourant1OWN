@@ -67,3 +67,4 @@ echo "For manual deployment:"
 echo "1. SSH to server: ssh master@143.110.155.248"
 echo "2. Run: cd ~/applications/ygrswjnpmw"
 echo "3. Run: ./ci-bootstrap/deploy-enhanced.sh"
+

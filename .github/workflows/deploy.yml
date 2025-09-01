@@ -41,8 +41,8 @@ jobs:
             echo "📤 Syncing files to server..."
             rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
             
-            echo "🔧 Running deployment script on server..."
-            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-minimal.sh && ./ci-bootstrap/deploy-minimal.sh"
+            echo "🔧 Running React deployment script on server..."
+            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-react.sh && ./ci-bootstrap/deploy-react.sh"
             
           elif [ -n "$SSH_PASS" ]; then
             echo "🔐 Using password authentication"
@@ -51,8 +51,8 @@ jobs:
             echo "📤 Syncing files to server..."
             sshpass -p "$SSH_PASS" rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
             
-            echo "🔧 Running deployment script on server..."
-            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-minimal.sh && ./ci-bootstrap/deploy-minimal.sh"
+            echo "🔧 Running React deployment script on server..."
+            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-react.sh && ./ci-bootstrap/deploy-react.sh"
             
           else
             echo "❌ No SSH credentials provided" >&2; exit 1; fi

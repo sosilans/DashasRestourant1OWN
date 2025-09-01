@@ -18,3 +18,4 @@ scp quick-deploy.html $SERVER_USER@$SERVER_HOST:$SERVER_PATH/index.html
 
 echo "✅ Deployment completed!"
 echo "🌍 Site should be available at: https://$SERVER_HOST/"
+
