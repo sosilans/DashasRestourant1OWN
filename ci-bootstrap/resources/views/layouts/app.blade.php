@@ -9,7 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/styles.css') }}?v={{ filemtime(public_path('css/styles.css')) }}" />
-    @php if (file_exists(public_path('build/manifest.json'))) { echo vite(['resources/css/app.css','resources/js/app.js']); } @endphp
+    {{-- Vite bundle is disabled on production to avoid overriding static CSS. --}}
+    {{-- Enable only if you explicitly build assets and want to use them. --}}
+    {{-- @vite(['resources/css/app.css','resources/js/app.js']) --}}
   </head>
   <body>
     @yield('body')
