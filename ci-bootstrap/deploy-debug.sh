@@ -57,9 +57,16 @@ if [ -d "power_site" ]; then
     else
         echo "❌ Laravel artisan not found"
     fi
+elif [ -d "public_html/power_site" ]; then
+    echo "✅ power_site directory exists in public_html"
+    if [ -f "public_html/power_site/artisan" ]; then
+        echo "✅ Laravel artisan found in public_html"
+    else
+        echo "❌ Laravel artisan not found in public_html"
+    fi
 else
     echo "❌ power_site directory not found"
-    echo "Creating Laravel application..."
+    echo "Creating Laravel application in public_html..."
     
     # Check if composer is available
     if ! command -v composer >/dev/null 2>&1; then
@@ -68,14 +75,16 @@ else
         sudo mv composer.phar /usr/local/bin/composer
     fi
     
-    # Create Laravel app
-    echo "Creating Laravel project..."
+    # Create Laravel app in public_html where we have write permissions
+    echo "Creating Laravel project in public_html..."
+    cd public_html
     composer create-project laravel/laravel power_site --prefer-dist --no-interaction || {
-        echo "❌ Failed to create Laravel project"
+        echo "❌ Failed to create Laravel project in public_html"
         exit 1
     }
+    cd ..
     
-    echo "✅ Laravel application created"
+    echo "✅ Laravel application created in public_html/power_site"
 fi
 
 echo ""
@@ -104,8 +113,18 @@ if [ -d "power_site/public" ]; then
         exit 1
     }
     echo "✅ Files copied successfully"
+elif [ -d "public_html/power_site/public" ]; then
+    echo "Copying from public_html/power_site/public to public_html..."
+    cp -a public_html/power_site/public/* public_html/ || {
+        echo "❌ Failed to copy files"
+        exit 1
+    }
+    echo "✅ Files copied successfully"
 else
-    echo "❌ power_site/public not found"
+    echo "❌ No Laravel public directory found"
+    echo "Available directories:"
+    ls -la power_site/ 2>/dev/null || echo "No power_site directory"
+    ls -la public_html/power_site/ 2>/dev/null || echo "No public_html/power_site directory"
     exit 1
 fi
 
