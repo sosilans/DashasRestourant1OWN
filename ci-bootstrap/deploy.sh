@@ -97,3 +97,15 @@ if [ ! -L public_html ] || [ ! -e public_html/index.php ]; then
   ls -la public_html | sed -n '1,120p'
 fi
 
+
+# Ensure webroot content is up-to-date when not using symlink
+cd ""
+if [ ! -L public_html ] && [ -d power_site/public ]; then
+  echo "[deploy] Webroot is not a symlink. Syncing power_site/public -> public_html"
+  rsync -a --delete power_site/public/ public_html/ || true
+  if [ -f public_html/index.php ]; then
+    sed -i "s#\../vendor/autoload.php#../power_site/vendor/autoload.php#" public_html/index.php || true
+    sed -i "s#\../bootstrap/app.php#../power_site/bootstrap/app.php#" public_html/index.php || true
+  fi
+  ls -la public_html | sed -n '1,120p'
+fi
