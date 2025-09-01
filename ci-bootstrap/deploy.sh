@@ -52,7 +52,8 @@ else
   cp -a ../ci-bootstrap/public/assets/. ./public/assets/ 2>/dev/null || true
   cp -a ../ci-bootstrap/resources/views/. ./resources/views/ 2>/dev/null || true
   cp -a ../ci-bootstrap/app/Http/Controllers/. ./app/Http/Controllers/ 2>/dev/null || true
-  cp -a ../ci-bootstrap/routes/web.php ./routes/web.php 2>/dev/null || truefi
+  cp -a ../ci-bootstrap/routes/web.php ./routes/web.php 2>/dev/null || true
+fi
 
 # Prepare env
 if [ -n "${SERVER_ENV:-}" ]; then
@@ -99,10 +100,15 @@ fi
 
 
 # Ensure webroot content is up-to-date when not using symlink
-cd ""
+cd "$BASE_DIR"
 if [ ! -L public_html ] && [ -d power_site/public ]; then
   echo "[deploy] Webroot is not a symlink. Syncing power_site/public -> public_html"
-  rsync -a --delete power_site/public/ public_html/ || true
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a --delete power_site/public/ public_html/
+  else
+    rm -rf public_html/*
+    cp -a power_site/public/. public_html/
+  fi
   if [ -f public_html/index.php ]; then
     sed -i "s#\../vendor/autoload.php#../power_site/vendor/autoload.php#" public_html/index.php || true
     sed -i "s#\../bootstrap/app.php#../power_site/bootstrap/app.php#" public_html/index.php || true
