@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Deploy - Dar'ya's Kitchen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .status {
+            font-size: 1.5em;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(46, 204, 113, 0.3);
+            border-radius: 10px;
+            border: 2px solid #2ecc71;
+        }
+        .info {
+            font-size: 1.1em;
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-top: 30px;
+        }
+        .emoji {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">🚀</div>
+        <h1>Test Deploy Successful!</h1>
+        <div class="status">✅ GitHub Actions Deploy Working</div>
+        <div class="info">🎯 Dar'ya's Kitchen Deployment Test</div>
+        <div class="info">🌐 Cloudways Server: phpstack-1511050-5820602.cloudwaysapps.com</div>
+        <div class="info">📅 Deploy Time: <span id="timestamp"></span></div>
+        <div class="info">🔧 All fixes applied and tested</div>
+        <div class="timestamp">
+            This test file confirms that the deployment pipeline is working correctly.
+            <br>Laravel app will be created automatically on first deploy.
+        </div>
+    </div>
+
+    <script>
+        // Set current timestamp
+        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+        
+        // Add some animation
+        setTimeout(() => {
+            document.querySelector('.status').style.transform = 'scale(1.05)';
+            document.querySelector('.status').style.transition = 'transform 0.3s ease';
+        }, 1000);
+    </script>
+</body>
+</html>
