@@ -1,9 +1,9 @@
 ﻿@extends('layouts.app')
-@section('title', "Daria's Italian Kitchen")
+@section('title', "Dar'ya's Kitchen")
 @section('body')
 <header class="site-header">
   <div class="container nav">
-    <div class="brand">Daria's Italian Kitchen</div>
+    <div class="brand">Dar'ya's Kitchen</div>
     <nav class="menu">
       <a href="#home">Home</a>
       <a href="#about">About</a>
@@ -96,16 +96,17 @@
         @empty
           <p class="note">No reviews yet.</p>
         @endforelse
+      </div>
       @guest
-      <div class="actions" style="margin-top:12px">
-        <a class="btn primary" href="{{ route('reviews.cta') }}">Log in to leave a review</a>
+      <div class="actions" style="margin:12px 0">
+        <a class="btn primary" href="{{ route('login') }}">Register / Log in</a>
       </div>
       @endguest
       @auth
       <div class="actions" style="margin:12px 0">
-        <a class="btn primary" href="#review-form">Add review</a>
+        <a class="btn primary" href="#review-form">Leave a review</a>
       </div>
-      </div>
+      @endauth
       @auth
       <form id="review-form" class="card form" method="post" action="{{ route('reviews.store') }}">
         @csrf

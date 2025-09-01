@@ -5,6 +5,17 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Review;
 class ReviewController extends Controller
 {
+    /** Redirect guests to login with return hash to review form */
+    public function cta(Request $request)
+    {
+        if ($request->user()) {
+            return redirect(route('home').'#review-form');
+        }
+        // Send guest to login and then back to home#review-form
+        session(['url.intended' => route('home').'#review-form']);
+        return redirect()->route('login');
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
