@@ -57,6 +57,15 @@ echo "✅ Verifying deployment..."
 echo "Files in public_html:"
 ls -la public_html/ | head -10
 
+# Create test admin user
+echo "🔐 Creating test admin user..."
+if [ -f "create-admin.sh" ]; then
+    chmod +x create-admin.sh
+    ./create-admin.sh
+else
+    echo "⚠️  create-admin.sh not found, skipping admin creation"
+fi
+
 echo "CSS files:"
 ls -la public_html/css/
 
