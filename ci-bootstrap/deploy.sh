@@ -12,9 +12,8 @@ cd ~/applications/ygrswjnpmw
 
 echo "📁 Current directory: $(pwd)"
 
-# Force pull latest changes
-echo "⬇️  Pulling latest changes..."
-git pull origin main
+# Skip git pull since we're deploying from GitHub Actions
+echo "⬇️  Skipping git pull - deploying from GitHub Actions..."
 
 # Ensure power_site is up to date
 echo "🔄 Updating power_site..."
