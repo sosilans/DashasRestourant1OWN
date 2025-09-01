@@ -8,9 +8,20 @@ set -e
 echo "🚀 Starting deployment..."
 
 # Navigate to the application directory
-cd ~/applications/ygrswjnpmw
-
 echo "📁 Current directory: $(pwd)"
+
+# Check if we're already in the right place
+if [ "$(pwd)" = "/home/master/applications/ygrswjnpmw/public_html" ]; then
+    echo "✅ Already in public_html, moving to parent directory..."
+    cd ..
+    echo "✅ Now in: $(pwd)"
+elif [ -d "~/applications/ygrswjnpmw" ]; then
+    echo "✅ Navigating to application directory..."
+    cd ~/applications/ygrswjnpmw
+    echo "✅ Now in: $(pwd)"
+else
+    echo "⚠️ Application directory not found, working from current directory: $(pwd)"
+fi
 
 # Check if power_site exists, if not, create Laravel app
 if [ ! -d "power_site" ]; then

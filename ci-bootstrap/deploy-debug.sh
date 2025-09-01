@@ -19,6 +19,7 @@ DEPLOY_BRANCH="${DEPLOY_BRANCH:-main}"
 echo "📋 Configuration:"
 echo "  APP_PATH: $APP_PATH"
 echo "  DEPLOY_BRANCH: $DEPLOY_BRANCH"
+echo "  Current directory: $(pwd)"
 echo ""
 
 # Check if we're in the right directory
@@ -27,11 +28,17 @@ if [ -d "$APP_PATH" ]; then
     echo "✅ App directory exists: $APP_PATH"
     cd "$APP_PATH"
     echo "✅ Changed to app directory: $(pwd)"
+elif [ "$(pwd)" = "/home/master/applications/ygrswjnpmw/public_html" ]; then
+    echo "✅ Already in public_html directory: $(pwd)"
+    echo "✅ Moving to parent directory..."
+    cd ..
+    echo "✅ Now in: $(pwd)"
 else
     echo "❌ App directory not found: $APP_PATH"
+    echo "Current directory: $(pwd)"
     echo "Available directories:"
     ls -la ~/applications/ 2>/dev/null || echo "No applications directory found"
-    exit 1
+    echo "Trying to work from current directory..."
 fi
 
 echo ""
