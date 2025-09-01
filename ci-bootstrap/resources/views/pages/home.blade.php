@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 @section('title', "Daria's Italian Kitchen")
 @section('body')
 <header class="site-header">
@@ -12,7 +12,7 @@
       <a href="#reviews">Reviews</a>
       <a class="btn" href="#reserve">Reserve</a>
     </nav>
-    <button class="hamburger" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">☰</button>
+    <button class="hamburger" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">â˜°</button>
   </div>
   <nav id="mobile-menu" class="mobile-menu" hidden>
     <a href="#home">Home</a>
@@ -25,10 +25,10 @@
 </header>
 <main>
   <section id="home" class="hero">
-    <div class="hero-media" style="background:url('{{ asset('assets/img/hero.svg') }}') center/cover no-repeat;"></div>
+    <div class="hero-media" style="background:url('{{ asset('assets/img/pizza.svg') }}') center/cover no-repeat;"></div>
     <div class="hero-content container">
       <h1>Tradition on Every Plate</h1>
-      <p>Fresh handmade pasta, wood‑fired flavors, and family recipes refined over generations.</p>
+      <p>Fresh handmade pasta, woodâ€‘fired flavors, and family recipes refined over generations.</p>
       <div class="actions">
         <a href="#menu" class="btn primary">Explore Menu</a>
         <a href="#reserve" class="btn ghost">Book a Table</a>
@@ -43,7 +43,7 @@
         <ul class="checks">
           <li>Handmade pastas daily</li>
           <li>Locally sourced produce</li>
-          <li>Vegetarian and gluten‑free options</li>
+          <li>Vegetarian and glutenâ€‘free options</li>
         </ul>
       </div>
       <div>
@@ -73,12 +73,12 @@
         <div>
           <ul class="hours-list">
             @foreach(($hours ?? []) as $h)
-            <li><strong>{{ ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][$h->day] }}</strong> {{ $h->open_time }} – {{ $h->close_time }}</li>
+            <li><strong>{{ ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][$h->day] }}</strong> {{ $h->open_time }} â€“ {{ $h->close_time }}</li>
             @endforeach
           </ul>
           <address>
             123 Via Roma, Your City<br/>
-            <a href="tel:+10000000000">+1 (000) 000‑0000</a>
+            <a href="tel:+10000000000">+1 (000) 000â€‘0000</a>
           </address>
         </div>
         <div>
@@ -92,17 +92,26 @@
       <h2>Guest Reviews</h2>
       <div class="grid">
         @forelse(($reviews ?? []) as $r)
-          <blockquote class="card">“{{ $r->body }}” — {{ optional($r->user)->name ?? 'Guest' }}</blockquote>
+          <blockquote class="card">â€œ{{ $r->body }}â€ â€” {{ optional($r->user)->name ?? 'Guest' }}</blockquote>
         @empty
           <p class="note">No reviews yet.</p>
         @endforelse
+      @guest
+      <div class="actions" style="margin-top:12px">
+        <a class="btn primary" href="{{ route('reviews.cta') }}">Log in to leave a review</a>
+      </div>
+      @endguest
+      @auth
+      <div class="actions" style="margin:12px 0">
+        <a class="btn primary" href="#review-form">Add review</a>
+      </div>
       </div>
       @auth
-      <form class="card form" method="post" action="{{ route('reviews.store') }}">
+      <form id="review-form" class="card form" method="post" action="{{ route('reviews.store') }}">
         @csrf
         <div class="grid two">
           <label>
-            <span>Rating (1–5)</span>
+            <span>Rating (1â€“5)</span>
             <input required type="number" name="rating" min="1" max="5" value="5" />
           </label>
           <label class="grid-col-span-2">
@@ -131,10 +140,12 @@
       <div>
         <div class="footer-title">Contact</div>
         <p><a href="mailto:hello@dariaskitchen.example">hello@dariaskitchen.example</a><br/>
-           <a href="tel:+10000000000">+1 (000) 000‑0000</a></p>
+           <a href="tel:+10000000000">+1 (000) 000â€‘0000</a></p>
       </div>
     </div>
-    <div class="legal">© <span id="year"></span> Daria's Italian Kitchen</div>
+    <div class="legal">Â© <span id="year"></span> Daria's Italian Kitchen</div>
   </div>
 </footer>
 @endsection
+
+
