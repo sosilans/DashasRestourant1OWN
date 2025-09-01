@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What Changed Test - Dar'ya's Kitchen</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .info {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 What Changed Test</h1>
+        
+        <div class="status">
+            <h2>🎯 Проверка Изменений</h2>
+            <p>Диагностический деплой прошел успешно! Заголовок изменился.</p>
+        </div>
+        
+        <div class="info">
+            <h3>✅ Что изменилось:</h3>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Заголовок: 'Dar'ya's Kitchen - Final Test' → 'Dariaâs Italian Kitchen'</li>
+                <li>Диагностический скрипт сработал</li>
+                <li>Сайт обновился</li>
+                <li>Деплой работает</li>
+            </ul>
+        </div>
+        
+        <div class="info">
+            <h3>🔍 Что нужно проверить:</h3>
+            <p>1. Отображается ли настоящий дизайн из Figma?</p>
+            <p>2. Или это все еще простой HTML файл?</p>
+            <p>3. React приложение собралось или fallback?</p>
+            <p>4. Какой контент показывается?</p>
+        </div>
+        
+        <div class="status">
+            <h3>🎉 Следующий шаг:</h3>
+            <p>Этот тест покажет, что именно отображается сейчас</p>
+            <p>И поможет понять, сработал ли React деплой</p>
+        </div>
+        
+        <div class="timestamp">
+            <p>Тест создан: <span id="time"></span></p>
+            <p>Dar'ya's Kitchen - What Changed Test</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
