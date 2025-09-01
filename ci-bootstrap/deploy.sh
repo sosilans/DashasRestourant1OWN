@@ -121,7 +121,7 @@ cd "$BASE_DIR"
 if [ ! -L public_html ] && [ -d power_site/public ]; then
   echo "[deploy] Webroot is not a symlink. Syncing power_site/public -> public_html"
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a --delete power_site/public/ public_html/
+    rsync -a --delete --no-perms power_site/public/ public_html/
   else
     rm -rf public_html/*
     cp -a power_site/public/. public_html/
@@ -131,5 +131,22 @@ if [ ! -L public_html ] && [ -d power_site/public ]; then
     sed -i "s#\../bootstrap/app.php#../power_site/bootstrap/app.php#" public_html/index.php || true
   fi
   ls -la public_html | sed -n '1,120p'
+fi
+
+# Force refresh public_html even if symlink exists (in case symlink is broken)
+echo "[deploy] Force refresh public_html from power_site/public"
+if [ -d power_site/public ]; then
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a --delete --no-perms power_site/public/ public_html/
+  else
+    rm -rf public_html/*
+    cp -a power_site/public/. public_html/
+  fi
+  if [ -f public_html/index.php ]; then
+    sed -i "s#\../vendor/autoload.php#../power_site/vendor/autoload.php#" public_html/index.php || true
+    sed -i "s#\../bootstrap/app.php#../power_site/bootstrap/app.php#" public_html/index.php || true
+  fi
+  echo "[deploy] public_html refreshed"
+  ls -la public_html | sed -n '1,10p'
 fi
 
