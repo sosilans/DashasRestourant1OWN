@@ -1,0 +1,44 @@
+﻿name: Build Design Preview
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'assets/design/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Build design (Vite)
+        working-directory: assets/design
+        run: |
+          npm ci || npm i
+          npm run build
+
+      - name: Copy build into public/design-preview
+        run: |
+          rm -rf ci-bootstrap/public/design-preview
+          mkdir -p ci-bootstrap/public/design-preview
+          cp -a assets/design/dist/. ci-bootstrap/public/design-preview/
+
+      - name: Commit preview artifacts
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add ci-bootstrap/public/design-preview
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "build(preview): update design-preview from assets/design"
+            git push origin HEAD:
+          fi
