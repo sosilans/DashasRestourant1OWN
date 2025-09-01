@@ -1,6 +1,7 @@
 ﻿:root{--bg:#0b0c10;--panel:#151820;--muted:#a0a6b1;--text:#e9edf2;--brand:#e74c3c;--brand-2:#2ecc71;--accent:#f5d6a1}
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+html{scroll-behavior:smooth}
 body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#0b0c10,#11131a 40%,#0b0c10);color:var(--text);line-height:1.6}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
@@ -71,3 +72,4 @@ a{color:inherit;text-decoration:none}
 .steam span:nth-child(2){left:52%;animation-delay:1.2s}
 .steam span:nth-child(3){left:50%;animation-delay:2.1s}
 @keyframes rise{0%{transform:translate(-50%,0) scale(.8);opacity:.0}20%{opacity:.8}100%{transform:translate(-50%,-120px) scale(1.1);opacity:0}}
+
