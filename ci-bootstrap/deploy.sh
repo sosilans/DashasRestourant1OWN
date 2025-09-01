@@ -17,8 +17,8 @@ echo "⬇️  Skipping git pull - deploying from GitHub Actions..."
 
 # Ensure power_site is up to date
 echo "🔄 Updating power_site..."
-# Copy files from ci-bootstrap directory
-cp -a ci-bootstrap/* power_site/
+# Copy files from current directory (repo root)
+cp -a ./* power_site/ 2>/dev/null || echo "Some files copied"
 
 # Force refresh public_html from power_site/public
 echo "🌐 Updating public_html..."
