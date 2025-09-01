@@ -34,3 +34,34 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Smooth in-page scrolling with sticky-header offset
+document.addEventListener('click', (event) => {
+  const anchor = event.target && event.target.closest('a[href^="#"]');
+  if (!anchor) return;
+
+  const hash = anchor.getAttribute('href');
+  if (!hash || hash === '#') return;
+
+  const target = document.querySelector(hash);
+  if (!target) return;
+
+  event.preventDefault();
+
+  const headerEl = document.querySelector('.site-header');
+  const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 0;
+  const extraGap = 8; // small breathing space
+  const top = Math.max(0, window.pageYOffset + target.getBoundingClientRect().top - headerHeight - extraGap);
+
+  window.scrollTo({ top, behavior: 'smooth' });
+  try { history.pushState(null, '', hash); } catch {}
+
+  // Close mobile menu if open
+  if (typeof mobile !== 'undefined' && mobile) {
+    mobile.setAttribute('hidden', '');
+    mobile.setAttribute('aria-hidden', 'true');
+  }
+  if (typeof btn !== 'undefined' && btn) {
+    btn.setAttribute('aria-expanded', 'false');
+  }
+});
+
