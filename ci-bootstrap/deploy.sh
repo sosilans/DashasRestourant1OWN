@@ -32,7 +32,14 @@ if [ ! -f power_site/artisan ]; then
   echo "[deploy] Creating Laravel app in $BASE_DIR/power_site"
   COMPOSER_MEMORY_LIMIT=-1 composer create-project laravel/laravel power_site
   cd power_site
-  COMPOSER_MEMORY_LIMIT=-1 composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier
+  # Install required packages with versions compatible with Cloudways PHP
+  COMPOSER_MEMORY_LIMIT=-1 composer require \
+    laravel/socialite \
+    spatie/laravel-permission:^6.0 \
+    spatie/laravel-csp:^2.10 \
+    bepsvpt/secure-headers:^9.0 \
+    mews/purifier:^3.4 \
+    --no-interaction --no-progress
   COMPOSER_MEMORY_LIMIT=-1 composer require laravel/breeze --dev
   php artisan breeze:install blade || true
   if command -v npm >/dev/null 2>&1; then
@@ -115,3 +122,4 @@ if [ ! -L public_html ] && [ -d power_site/public ]; then
   fi
   ls -la public_html | sed -n '1,120p'
 fi
+
