@@ -54,12 +54,14 @@ if [ ! -f power_site/artisan ]; then
 else
   cd power_site
   echo "[deploy] Refresh overlay"
-  cp -a ../ci-bootstrap/public/css/. ./public/css/ 2>/dev/null || true
-  cp -a ../ci-bootstrap/public/js/. ./public/js/ 2>/dev/null || true
-  cp -a ../ci-bootstrap/public/assets/. ./public/assets/ 2>/dev/null || true
-  cp -a ../ci-bootstrap/resources/views/. ./resources/views/ 2>/dev/null || true
-  cp -a ../ci-bootstrap/app/Http/Controllers/. ./app/Http/Controllers/ 2>/dev/null || true
-  cp -a ../ci-bootstrap/routes/web.php ./routes/web.php 2>/dev/null || true
+  # When power_site is created in the parent of APP_DIR, ../ci-bootstrap does not exist.
+  # Always copy from the checked-out repo at $REPO_DIR.
+  cp -a "$REPO_DIR/ci-bootstrap/public/css/." ./public/css/ 2>/dev/null || true
+  cp -a "$REPO_DIR/ci-bootstrap/public/js/." ./public/js/ 2>/dev/null || true
+  cp -a "$REPO_DIR/ci-bootstrap/public/assets/." ./public/assets/ 2>/dev/null || true
+  cp -a "$REPO_DIR/ci-bootstrap/resources/views/." ./resources/views/ 2>/dev/null || true
+  cp -a "$REPO_DIR/ci-bootstrap/app/Http/Controllers/." ./app/Http/Controllers/ 2>/dev/null || true
+  cp -a "$REPO_DIR/ci-bootstrap/routes/web.php" ./routes/web.php 2>/dev/null || true
 fi
 
 # Prepare env
