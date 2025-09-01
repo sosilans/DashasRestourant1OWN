@@ -38,8 +38,12 @@ for file in *.html; do
     fi
 done
 
-# Create a simple index.html if none exists
-if [ ! -f "public_html/index.html" ]; then
+# Create index.html from final-test.html if it exists, otherwise create simple one
+if [ -f "final-test.html" ]; then
+    echo "📝 Using final-test.html as index.html..."
+    cp final-test.html public_html/index.html
+    echo "✅ final-test.html copied as index.html"
+elif [ ! -f "public_html/index.html" ]; then
     echo "📝 Creating simple index.html..."
     cat > public_html/index.html << 'EOF'
 <!DOCTYPE html>
