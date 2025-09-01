@@ -1,0 +1,33 @@
+name: Deploy to Cloudways
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Deploy to Cloudways
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.CLOUDWAYS_HOST }}
+        username: ${{ secrets.CLOUDWAYS_USER }}
+        password: ${{ secrets.CLOUDWAYS_PASSWORD }}
+        port: 22
+        script: |
+          cd ~/applications/ygrswjnpmw
+          git pull origin main || git pull origin master
+          chmod +x ci-bootstrap/deploy.sh
+          ./ci-bootstrap/deploy.sh
+          
+    - name: Verify deployment
+      run: |
+        echo "Deployment completed. Checking site status..."
+        sleep 30
+        curl -f https://phpstack-1511050-5820602.cloudwaysapps.com/ || echo "Site may still be deploying..."
