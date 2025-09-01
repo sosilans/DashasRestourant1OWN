@@ -1,5 +1,5 @@
 ﻿// Basic interactions and animations
-const yearEl = document.getElementById(''year'');
+const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 // Mobile menu toggle
