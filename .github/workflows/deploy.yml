@@ -21,7 +21,16 @@ jobs:
         password: ${{ secrets.CLOUDWAYS_SSH_PASS }}
         port: 22
         script: |
+          echo "=== DEPLOYMENT DEBUG INFO ==="
+          echo "Current user: $(whoami)"
+          echo "Current directory: $(pwd)"
+          echo "Home directory: $HOME"
+          echo "Available space: $(df -h . | tail -1)"
+          
           cd ~/applications/ygrswjnpmw
+          echo "App directory: $(pwd)"
+          echo "Directory contents before:"
+          ls -la
           
           # If repository doesn't exist, clone it
           if [ ! -d ".git" ]; then
@@ -32,6 +41,9 @@ jobs:
             echo "Repository exists, pulling latest changes..."
             git pull origin main || git pull origin master
           fi
+          
+          echo "Directory contents after git:"
+          ls -la
           
           # Make sure we have the deployment script
           if [ -f "ci-bootstrap/deploy.sh" ]; then
@@ -65,7 +77,11 @@ jobs:
                 find public_html/ -type f -name "*.png" -exec chmod 644 {} \;
                 
                 # List files to verify
-                echo "Files in public_html:"
+                echo "=== FILES IN PUBLIC_HTML ==="
+                ls -la public_html/
+                echo "=== INDEX.HTML CONTENT ==="
+                head -20 public_html/index.html || echo "No index.html found"
+                echo "=== PUBLIC_HTML PERMISSIONS ==="
                 ls -la public_html/
                 
                 echo "React app deployed successfully!"
