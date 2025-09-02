@@ -41,8 +41,8 @@ jobs:
             echo "📤 Syncing files to server..."
             rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
             
-            echo "🚀 Running SIMPLE VINTAGE deployment script on server..."
-            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-simple-vintage.sh && ./ci-bootstrap/deploy-simple-vintage.sh"
+            echo "🚀 Running WORKING TEMPLATE deployment script on server..."
+            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-working-template.sh && ./ci-bootstrap/deploy-working-template.sh"
             
           elif [ -n "$SSH_PASS" ]; then
             echo "🔐 Using password authentication"
@@ -51,8 +51,8 @@ jobs:
             echo "📤 Syncing files to server..."
             sshpass -p "$SSH_PASS" rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
             
-            echo "🚀 Running SIMPLE VINTAGE deployment script on server..."
-            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-simple-vintage.sh && ./ci-bootstrap/deploy-simple-vintage.sh"
+            echo "🚀 Running WORKING TEMPLATE deployment script on server..."
+            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-working-template.sh && ./ci-bootstrap/deploy-working-template.sh"
             
           else
             echo "❌ No SSH credentials provided" >&2; exit 1; fi
