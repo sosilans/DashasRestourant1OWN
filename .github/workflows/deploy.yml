@@ -41,8 +41,8 @@ jobs:
             echo "📤 Syncing files to server..."
             rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
             
-            echo "🚀 Running CORRECT TEMPLATE deployment script on server..."
-            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-correct-template.sh && ./ci-bootstrap/deploy-correct-template.sh"
+            echo "🚀 Running EXACT SCREENSHOT deployment script on server..."
+            ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-exact-screenshot.sh && ./ci-bootstrap/deploy-exact-screenshot.sh"
             
           elif [ -n "$SSH_PASS" ]; then
             echo "🔐 Using password authentication"
@@ -51,8 +51,8 @@ jobs:
             echo "📤 Syncing files to server..."
             sshpass -p "$SSH_PASS" rsync -az --delete -e "ssh -o StrictHostKeyChecking=no" ./ "$SSH_USER@$SSH_HOST:$APP_DIR/"
             
-            echo "🚀 Running CORRECT TEMPLATE deployment script on server..."
-            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-correct-template.sh && ./ci-bootstrap/deploy-correct-template.sh"
+            echo "🚀 Running EXACT SCREENSHOT deployment script on server..."
+            sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" "cd $APP_DIR && chmod +x ci-bootstrap/deploy-exact-screenshot.sh && ./ci-bootstrap/deploy-exact-screenshot.sh"
             
           else
             echo "❌ No SSH credentials provided" >&2; exit 1; fi
