@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal Test - Dar'ya's Kitchen</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 50px; 
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { font-size: 2.5em; margin-bottom: 20px; }
+        .status { 
+            background: rgba(46, 204, 113, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #2ecc71;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Minimal Test Works!</h1>
+        <div class="status">
+            ✅ Files are being deployed correctly<br>
+            ✅ Minimal script is working<br>
+            ✅ Site is accessible
+        </div>
+        <p>This confirms that the minimal deployment approach works.</p>
+        <p><strong>Dar'ya's Kitchen</strong> - Minimal Test</p>
+        <p><small>Deployed: <span id="time"></span></small></p>
+    </div>
+    
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
+

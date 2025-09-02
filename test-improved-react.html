@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMPROVED REACT Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-width: 800px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .features {
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+        
+        .features h2 {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .features li:before {
+            content: "✅ ";
+            color: #4ade80;
+            font-weight: bold;
+        }
+        
+        .status {
+            background: rgba(34, 197, 94, 0.2);
+            border: 2px solid #22c55e;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+        }
+        
+        .warning {
+            background: rgba(251, 191, 36, 0.2);
+            border: 2px solid #fbbf24;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 IMPROVED REACT Test</h1>
+        
+        <div class="status">
+            <h3>🎯 Deployment Status: READY</h3>
+            <p>New improved React deployment script created and ready for use!</p>
+        </div>
+        
+        <div class="features">
+            <h2>✨ What's New in IMPROVED REACT:</h2>
+            <ul>
+                <li><strong>Working Steam Animation:</strong> Beautiful animated steam particles above the pizza</li>
+                <li><strong>Enhanced Pizza Design:</strong> Realistic gradients, shadows, and textures</li>
+                <li><strong>Hover Effects:</strong> Interactive hero frame with scale transformation</li>
+                <li><strong>React App Support:</strong> Can build and deploy React applications</li>
+                <li><strong>Fallback HTML:</strong> Enhanced static HTML if React build fails</li>
+                <li><strong>Improved CSS:</strong> Better shadows, depth, and visual effects</li>
+                <li><strong>Responsive Design:</strong> Mobile-optimized layout</li>
+                <li><strong>Enhanced Animations:</strong> Smooth transitions and keyframe animations</li>
+            </ul>
+        </div>
+        
+        <div class="warning">
+            <h3>⚠️ Important Notes:</h3>
+            <ul>
+                <li>This script will attempt to build the React app first</li>
+                <li>If React build fails, it creates an enhanced HTML version</li>
+                <li>All animations and effects are preserved in both versions</li>
+                <li>Deployment is safe and won't break existing functionality</li>
+            </ul>
+        </div>
+        
+        <div class="status">
+            <h3>🔧 Technical Details:</h3>
+            <p><strong>Script:</strong> <code>ci-bootstrap/deploy-improved-react.sh</code></p>
+            <p><strong>GitHub Actions:</strong> Updated to use new script</p>
+            <p><strong>Features:</strong> Steam animation, hover effects, enhanced pizza design</p>
+            <p><strong>Fallback:</strong> Enhanced HTML with all working animations</p>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1rem; background: rgba(255,255,255,0.1); border-radius: 10px;">
+            <h3>🎉 Ready for Deployment!</h3>
+            <p>The next push to GitHub will automatically deploy the improved version!</p>
+            <p><strong>Time:</strong> <span id="current-time"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString();
+        }
+        
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        // Add some interactive effects
+        document.querySelectorAll('.features li').forEach((li, index) => {
+            li.style.animationDelay = `${index * 0.1}s`;
+            li.style.animation = 'fadeInUp 0.5s ease-out forwards';
+            li.style.opacity = '0';
+        });
+        
+        // CSS animation for list items
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

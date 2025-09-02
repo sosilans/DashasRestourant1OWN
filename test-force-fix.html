@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Force Fix Test - Dar'ya's Kitchen</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .info {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💥 Force Fix Test</h1>
+        
+        <div class="status">
+            <h2>🎯 Принудительное Исправление</h2>
+            <p>Диагностика показала проблему - React не собирается. Применяем FORCE FIX!</p>
+        </div>
+        
+        <div class="info">
+            <h3>🔧 Что делает Force Fix:</h3>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Создает HTML версию дизайна из Figma</li>
+                <li>Использует правильные шрифты и стили</li>
+                <li>Включает SVG иллюстрацию пиццы</li>
+                <li>Создает vintage дизайн с рамкой</li>
+                <li>Обходит проблемы с React сборкой</li>
+            </ul>
+        </div>
+        
+        <div class="info">
+            <h3>🎨 Ожидаемый результат:</h3>
+            <p>Сайт должен показать красивый дизайн:</p>
+            <p>• Бежевый фон (#f0e4d3)</p>
+            <p>• Белая рамка с угловыми украшениями</p>
+            <p>• "Homestyle Italian Cuisine"</p>
+            <p>• "DAR'YA'S KITCHEN" большими буквами</p>
+            <p>• SVG пицца в центре</p>
+        </div>
+        
+        <div class="status">
+            <h3>🚀 Следующий шаг:</h3>
+            <p>Force Fix скрипт создаст правильный дизайн</p>
+            <p>И сайт наконец-то будет выглядеть как в Figma!</p>
+        </div>
+        
+        <div class="timestamp">
+            <p>Тест создан: <span id="time"></span></p>
+            <p>Dar'ya's Kitchen - Force Fix Test</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>

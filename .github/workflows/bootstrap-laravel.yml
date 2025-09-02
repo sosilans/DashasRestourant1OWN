@@ -1,0 +1,128 @@
+﻿name: Bootstrap Laravel
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bootstrap-laravel-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if already bootstrapped
+        id: check
+        run: |
+          if [ -f power_site/artisan ]; then
+            echo "already=true" >> $GITHUB_OUTPUT
+          else
+            echo "already=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup PHP
+        if: steps.check.outputs.already == 'false'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, intl, gd, pdo_mysql, pdo_sqlite
+          coverage: none
+
+      - name: Setup Node
+        if: steps.check.outputs.already == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Composer
+        if: steps.check.outputs.already == 'false'
+        run: |
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+          rm composer-setup.php
+
+      
+      - name: Git commit Laravel skeleton (early)
+        if: steps.check.outputs.already == 'false'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add power_site
+          git commit -m "chore: add Laravel skeleton (power_site)"
+          git push origin HEAD:${GITHUB_REF##*/}
+      - name: Require core packages
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          COMPOSER_MEMORY_LIMIT=-1 composer require laravel/socialite spatie/laravel-permission filament/filament spatie/laravel-csp bepsvpt/secure-headers mews/purifier
+          composer require laravel/breeze --dev
+
+      - name: Install Breeze (Blade)
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          php artisan breeze:install blade
+
+      - name: Node deps and build
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          npm ci || npm i
+          npm run build
+
+      - name: Publish spatie/permission migrations
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          php artisan vendor:publish --provider="Spatie\\Permission\\PermissionServiceProvider"
+
+      - name: Add overlays (readme, env.example, deploy scripts, workflows)
+        if: steps.check.outputs.already == 'false'
+        run: |
+          cp -a ci-bootstrap/. power_site/
+
+      - name: Prepare app key and test DB
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+          php -r "file_exists('database') || mkdir('database');"
+          php -r "file_put_contents('database/database.sqlite','');"
+          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          sed -i 's/^DB_DATABASE=.*/DB_DATABASE=database\/database.sqlite/' .env
+
+      - name: Run migrations
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          php artisan migrate --force `n          php artisan db:seed --force 
+
+      - name: Run tests
+        if: steps.check.outputs.already == 'false'
+        working-directory: power_site
+        run: |
+          ./vendor/bin/phpunit --testdox
+
+      - name: Git commit generated app
+        if: steps.check.outputs.already == 'false'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add power_site
+          git commit -m "chore: bootstrap Laravel app (power_site) with Breeze, Filament, Permission, Socialite"
+          git push origin HEAD:${GITHUB_REF##*/}
+
+
+
+

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ready Template Test - Dar'ya's Kitchen</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        .info {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .timestamp {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Ready Template Test</h1>
+        
+        <div class="status">
+            <h2>🎯 Готовый HTML Шаблон</h2>
+            <p>Никаких сборок, компиляций, npm install!</p>
+        </div>
+        
+        <div class="info">
+            <h3>🚀 Преимущества готового шаблона:</h3>
+            <ul style="text-align: left; display: inline-block;">
+                <li>✅ Никаких npm install</li>
+                <li>✅ Никаких build команд</li>
+                <li>✅ Никаких компиляций</li>
+                <li>✅ Просто копируется на сервер</li>
+                <li>✅ Работает сразу после загрузки</li>
+                <li>✅ Все стили и скрипты встроены</li>
+            </ul>
+        </div>
+        
+        <div class="info">
+            <h3>🎨 Что включено в шаблон:</h3>
+            <p>• Hero секция с точным дизайном</p>
+            <p>• Красивая пицца с градиентами</p>
+            <p>• Работающая анимация пара</p>
+            <p>• About, Menu, Footer секции</p>
+            <p>• Responsive дизайн</p>
+            <p>• Все шрифты и стили</p>
+        </div>
+        
+        <div class="status">
+            <h3>⚡ Время деплоя:</h3>
+            <p>• Старый способ: 5-10 минут</p>
+            <p>• Новый способ: 30 секунд!</p>
+        </div>
+        
+        <div class="timestamp">
+            <p>Тест создан: <span id="time"></span></p>
+            <p>Dar'ya's Kitchen - Ready Template Test</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('time').textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>
