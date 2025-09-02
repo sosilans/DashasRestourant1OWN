@@ -49,7 +49,25 @@ jobs:
               
               # Copy build files to public_html
               if [ -d "assets/design/build" ]; then
+                echo "Copying React build to public_html..."
+                
+                # Clear public_html first
+                rm -rf public_html/*
+                
+                # Copy all build files
                 cp -r assets/design/build/* public_html/
+                
+                # Set proper permissions
+                chmod -R 755 public_html/
+                find public_html/ -type f -name "*.html" -exec chmod 644 {} \;
+                find public_html/ -type f -name "*.css" -exec chmod 644 {} \;
+                find public_html/ -type f -name "*.js" -exec chmod 644 {} \;
+                find public_html/ -type f -name "*.png" -exec chmod 644 {} \;
+                
+                # List files to verify
+                echo "Files in public_html:"
+                ls -la public_html/
+                
                 echo "React app deployed successfully!"
               else
                 echo "Build failed - no build directory found"
