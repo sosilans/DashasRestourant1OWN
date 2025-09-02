@@ -1,0 +1,27 @@
+{
+  "name": "daryas-kitchen-frontend",
+  "version": "1.0.0",
+  "description": "Modern frontend for Dar'ya's Kitchen restaurant website",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000 --open=/",
+    "build": "echo 'Static site - no build required'",
+    "deploy": "powershell -ExecutionPolicy Bypass -File deploy-new-frontend.ps1"
+  },
+  "keywords": [
+    "restaurant",
+    "italian",
+    "food",
+    "website",
+    "frontend"
+  ],
+  "author": "Dar'ya's Kitchen",
+  "license": "MIT",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

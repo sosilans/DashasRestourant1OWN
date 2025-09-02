@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dar'ya's Kitchen - Authentic Italian Cuisine</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Dar'ya's Kitchen</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#reviews">Reviews</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Authentic Italian Cuisine</h1>
+            <p>Experience the taste of Italy in every bite</p>
+            <div class="hero-buttons">
+                <a href="#menu" class="btn btn-primary">View Menu</a>
+                <a href="#contact" class="btn btn-secondary">Make Reservation</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="pizza-animation">🍕</div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>Our Story</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Welcome to Dar'ya's Kitchen, where passion meets tradition. Our authentic Italian recipes have been passed down through generations, bringing the true flavors of Italy to your table.</p>
+                    <p>Every dish is crafted with love, using the finest ingredients and traditional cooking methods that have stood the test of time.</p>
+                </div>
+                <div class="about-image">
+                    <div class="image-placeholder">🍝</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="menu">
+        <div class="container">
+            <h2>Our Menu</h2>
+            <div class="menu-categories">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="appetizers">Appetizers</button>
+                <button class="category-btn" data-category="main">Main Courses</button>
+                <button class="category-btn" data-category="desserts">Desserts</button>
+            </div>
+            <div id="menu-items" class="menu-grid">
+                <!-- Menu items will be loaded from API -->
+                <div class="loading">Loading menu...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="reviews">
+        <div class="container">
+            <h2>Customer Reviews</h2>
+            <div id="reviews-container" class="reviews-grid">
+                <!-- Reviews will be loaded from API -->
+                <div class="loading">Loading reviews...</div>
+            </div>
+            <div class="add-review">
+                <h3>Leave a Review</h3>
+                <form id="review-form">
+                    <input type="text" id="reviewer-name" placeholder="Your Name" required>
+                    <textarea id="review-text" placeholder="Your Review" required></textarea>
+                    <div class="rating">
+                        <span class="star" data-rating="1">⭐</span>
+                        <span class="star" data-rating="2">⭐</span>
+                        <span class="star" data-rating="3">⭐</span>
+                        <span class="star" data-rating="4">⭐</span>
+                        <span class="star" data-rating="5">⭐</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Review</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contact & Hours</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <p><strong>Phone:</strong> (279) 386-4439</p>
+                    <p><strong>Email:</strong> info@daryaskitchen.com</p>
+                    <div id="hours-info">
+                        <!-- Hours will be loaded from API -->
+                        <div class="loading">Loading hours...</div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h3>Make a Reservation</h3>
+                    <form id="reservation-form">
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                        <input type="tel" placeholder="Your Phone" required>
+                        <input type="date" required>
+                        <input type="time" required>
+                        <input type="number" placeholder="Number of Guests" min="1" max="10" required>
+                        <button type="submit" class="btn btn-primary">Book Table</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Dar'ya's Kitchen</h3>
+                    <p>Authentic Italian Cuisine</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#menu">Menu</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p>Phone: (279) 386-4439</p>
+                    <p>Email: info@daryaskitchen.com</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Dar'ya's Kitchen. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
+  

@@ -50,47 +50,37 @@ jobs:
           echo "Directory contents after git:"
           ls -la
           
-          # Make sure we have the deployment script
-          if [ -f "website_code/ci-bootstrap/deploy.sh" ]; then
-            chmod +x website_code/ci-bootstrap/deploy.sh
-            cd website_code
-            ./ci-bootstrap/deploy.sh
-            cd ..
-          else
-            echo "Deploy script not found, deploying React build directly..."
+          # Check for NEW_FRONTEND directory
+          if [ -d "website_code/NEW_FRONTEND" ]; then
+            echo "Found NEW_FRONTEND directory, deploying..."
             
-            # Check for NEW_FRONTEND directory
-            if [ -d "website_code/NEW_FRONTEND" ]; then
-              echo "Found NEW_FRONTEND directory, deploying..."
-              
-              # Clear public_html first
-              rm -rf public_html/*
-              
-              # Copy all files from NEW_FRONTEND (except README and scripts)
-              find website_code/NEW_FRONTEND -type f ! -name "README.md" ! -name "*.ps1" -exec cp {} public_html/ \;
-              
-              # Copy directories
-              for dir in website_code/NEW_FRONTEND/*/; do
-                if [ -d "$dir" ]; then
-                  dirname=$(basename "$dir")
-                  cp -r "$dir" public_html/
-                fi
-              done
-              
-              # Set proper permissions
-              chmod -R 755 public_html/
-              find public_html/ -type f -exec chmod 644 {} \;
-              
-              echo "=== NEW FRONTEND DEPLOYED ==="
-              ls -la public_html/
-              
-            else
-              echo "No NEW_FRONTEND directory found, keeping placeholder..."
-              echo "To deploy new frontend:"
-              echo "1. Add files to NEW_FRONTEND/ directory"
-              echo "2. Push to GitHub"
-              echo "3. Deployment will happen automatically"
-            fi
+            # Clear public_html first
+            rm -rf public_html/*
+            
+            # Copy all files from NEW_FRONTEND (except README and scripts)
+            find website_code/NEW_FRONTEND -type f ! -name "README.md" ! -name "*.ps1" -exec cp {} public_html/ \;
+            
+            # Copy directories
+            for dir in website_code/NEW_FRONTEND/*/; do
+              if [ -d "$dir" ]; then
+                dirname=$(basename "$dir")
+                cp -r "$dir" public_html/
+              fi
+            done
+            
+            # Set proper permissions for web access
+            chmod -R 755 public_html/
+            find public_html/ -type f -exec chmod 644 {} \;
+            
+            echo "=== NEW FRONTEND DEPLOYED ==="
+            ls -la public_html/
+            
+          else
+            echo "No NEW_FRONTEND directory found, keeping placeholder..."
+            echo "To deploy new frontend:"
+            echo "1. Add files to NEW_FRONTEND/ directory"
+            echo "2. Push to GitHub"
+            echo "3. Deployment will happen automatically"
           fi
 
     - name: Verify deployment
