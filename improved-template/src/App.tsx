@@ -1,11 +1,10 @@
-import Navbar from './components/Navbar';
+import VintageHero from './components/VintageHero';
 import AboutUs from './components/AboutUs';
 import Menu from './components/Menu';
 import Specials from './components/Specials';
 import Reviews from './components/Reviews';
 import HoursLocation from './components/HoursLocation';
 import Footer from './components/Footer';
-import VintageHero from './components/VintageHero';
 
 export default function App() {
   return (
@@ -19,7 +18,6 @@ export default function App() {
       />
       
       <div className="overflow-x-hidden">
-  <Navbar />
         <VintageHero />
         <AboutUs />
         <Menu />
