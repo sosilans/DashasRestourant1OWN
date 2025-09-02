@@ -59,44 +59,37 @@ jobs:
           else
             echo "Deploy script not found, deploying React build directly..."
             
-            # Build React app if needed
-            if [ -d "website_code/assets/design" ]; then
-              cd website_code/assets/design
-              npm install
-              npm run build
-              cd ../../..
+            # Check for NEW_FRONTEND directory
+            if [ -d "website_code/NEW_FRONTEND" ]; then
+              echo "Found NEW_FRONTEND directory, deploying..."
               
-              # Copy build files to public_html
-              if [ -d "website_code/assets/design/build" ]; then
-                echo "Copying React build to public_html..."
-                
-                # Clear public_html first
-                rm -rf public_html/*
-                
-                # Copy all build files
-                cp -r website_code/assets/design/build/* public_html/
-                
-                # Set proper permissions
-                chmod -R 755 public_html/
-                find public_html/ -type f -name "*.html" -exec chmod 644 {} \;
-                find public_html/ -type f -name "*.css" -exec chmod 644 {} \;
-                find public_html/ -type f -name "*.js" -exec chmod 644 {} \;
-                find public_html/ -type f -name "*.png" -exec chmod 644 {} \;
-                
-                # List files to verify
-                echo "=== FILES IN PUBLIC_HTML ==="
-                ls -la public_html/
-                echo "=== INDEX.HTML CONTENT ==="
-                head -20 public_html/index.html || echo "No index.html found"
-                echo "=== PUBLIC_HTML PERMISSIONS ==="
-                ls -la public_html/
-                
-                echo "React app deployed successfully!"
-              else
-                echo "Build failed - no build directory found"
-              fi
+              # Clear public_html first
+              rm -rf public_html/*
+              
+              # Copy all files from NEW_FRONTEND (except README and scripts)
+              find website_code/NEW_FRONTEND -type f ! -name "README.md" ! -name "*.ps1" -exec cp {} public_html/ \;
+              
+              # Copy directories
+              for dir in website_code/NEW_FRONTEND/*/; do
+                if [ -d "$dir" ]; then
+                  dirname=$(basename "$dir")
+                  cp -r "$dir" public_html/
+                fi
+              done
+              
+              # Set proper permissions
+              chmod -R 755 public_html/
+              find public_html/ -type f -exec chmod 644 {} \;
+              
+              echo "=== NEW FRONTEND DEPLOYED ==="
+              ls -la public_html/
+              
             else
-              echo "No React project found"
+              echo "No NEW_FRONTEND directory found, keeping placeholder..."
+              echo "To deploy new frontend:"
+              echo "1. Add files to NEW_FRONTEND/ directory"
+              echo "2. Push to GitHub"
+              echo "3. Deployment will happen automatically"
             fi
           fi
 

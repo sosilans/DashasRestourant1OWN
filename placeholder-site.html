@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dar'ya's Kitchen - Coming Soon</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f0e4d3 0%, #e8d5a3 100%);
+            color: #314a60;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border: 3px double #314a60;
+            border-radius: 10px;
+        }
+        h1 { 
+            font-size: 3rem; 
+            margin-bottom: 20px;
+            font-family: 'Times New Roman', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .pizza { 
+            font-size: 6rem; 
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        p { 
+            font-size: 1.2rem; 
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .phone {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #B49560;
+            margin-top: 20px;
+        }
+        .note {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pizza">🍕</div>
+        <h1>Dar'ya's Kitchen</h1>
+        <p>Authentic Italian Cuisine</p>
+        <p>Our new website is coming soon!</p>
+        <div class="phone">📞 (279) 386-4439</div>
+        <p class="note">
+            Backend functionality ready<br>
+            Frontend template placeholder active
+        </p>
+    </div>
+</body>
+</html>
