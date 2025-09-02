@@ -1,0 +1,38 @@
+ИНСТРУКЦИИ ПО СОЗДАНИЮ GITHUB РЕПОЗИТОРИЯ
+==========================================
+
+ШАГ 1: Создайте репозиторий на GitHub
+---------------------------------------
+1. Откройте https://github.com/new в браузере
+2. Введите данные:
+   - Repository name: dariyas-kitchen-website
+   - Description: Complete React website for Dar'ya's Italian Kitchen restaurant
+   - Visibility: Public
+3. НЕ добавляйте README, .gitignore или license
+4. Нажмите "Create repository"
+
+ШАГ 2: Получите URL репозитория
+---------------------------------
+После создания, GitHub покажет URL вашего репозитория.
+Он будет выглядеть как: https://github.com/YOUR_USERNAME/dariyas-kitchen-website.git
+
+ШАГ 3: Добавьте remote и запушьте
+-----------------------------------
+Замените YOUR_USERNAME на ваше имя пользователя GitHub:
+
+git remote add origin https://github.com/YOUR_USERNAME/dariyas-kitchen-website.git
+git branch -M main
+git push -u origin main
+
+ШАГ 4: Настройте GitHub Actions (опционально)
+---------------------------------------------
+1. Перейдите в Settings > Secrets and variables > Actions
+2. Добавьте секреты:
+   - CLOUDWAYS_HOST: 143.110.155.248
+   - CLOUDWAYS_USER: master_znmnwmhwkc
+   - CLOUDWAYS_PASSWORD: pXhkDa6keQh7
+
+ГОТОВО!
+--------
+После выполнения этих шагов ваш код будет на GitHub,
+а сайт автоматически будет деплоиться при каждом пуше!
