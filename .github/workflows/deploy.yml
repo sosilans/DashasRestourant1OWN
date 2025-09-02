@@ -35,39 +35,46 @@ jobs:
           # If repository doesn't exist, clone it
           if [ ! -d ".git" ]; then
             echo "Repository not found, cloning..."
-            rm -rf *
+            # Create a separate directory for our code
+            mkdir -p website_code
+            cd website_code
             git clone https://github.com/sosilans/NEWDariasItalianKitchen4.git .
+            cd ..
           else
             echo "Repository exists, pulling latest changes..."
+            cd website_code
             git pull origin main || git pull origin master
+            cd ..
           fi
           
           echo "Directory contents after git:"
           ls -la
           
           # Make sure we have the deployment script
-          if [ -f "ci-bootstrap/deploy.sh" ]; then
-            chmod +x ci-bootstrap/deploy.sh
+          if [ -f "website_code/ci-bootstrap/deploy.sh" ]; then
+            chmod +x website_code/ci-bootstrap/deploy.sh
+            cd website_code
             ./ci-bootstrap/deploy.sh
+            cd ..
           else
             echo "Deploy script not found, deploying React build directly..."
             
             # Build React app if needed
-            if [ -d "assets/design" ]; then
-              cd assets/design
+            if [ -d "website_code/assets/design" ]; then
+              cd website_code/assets/design
               npm install
               npm run build
-              cd ../..
+              cd ../../..
               
               # Copy build files to public_html
-              if [ -d "assets/design/build" ]; then
+              if [ -d "website_code/assets/design/build" ]; then
                 echo "Copying React build to public_html..."
                 
                 # Clear public_html first
                 rm -rf public_html/*
                 
                 # Copy all build files
-                cp -r assets/design/build/* public_html/
+                cp -r website_code/assets/design/build/* public_html/
                 
                 # Set proper permissions
                 chmod -R 755 public_html/
