@@ -16,9 +16,9 @@ jobs:
     - name: Deploy to Cloudways
       uses: appleboy/ssh-action@v1.0.3
       with:
-        host: 143.110.155.248
-        username: master_znmnwmhwkc
-        password: pXhkDa6keQh7
+        host: ${{ secrets.CLOUDWAYS_SSH_HOST }}
+        username: ${{ secrets.CLOUDWAYS_SSH_USER }}
+        password: ${{ secrets.CLOUDWAYS_SSH_PASS }}
         port: 22
         script: |
           cd ~/applications/ygrswjnpmw
