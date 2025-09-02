@@ -22,9 +22,42 @@ jobs:
         port: 22
         script: |
           cd ~/applications/ygrswjnpmw
-          git pull origin main || git pull origin master
-          chmod +x ci-bootstrap/deploy.sh
-          ./ci-bootstrap/deploy.sh
+          
+          # If repository doesn't exist, clone it
+          if [ ! -d ".git" ]; then
+            echo "Repository not found, cloning..."
+            rm -rf *
+            git clone https://github.com/sosilans/NEWDariasItalianKitchen4.git .
+          else
+            echo "Repository exists, pulling latest changes..."
+            git pull origin main || git pull origin master
+          fi
+          
+          # Make sure we have the deployment script
+          if [ -f "ci-bootstrap/deploy.sh" ]; then
+            chmod +x ci-bootstrap/deploy.sh
+            ./ci-bootstrap/deploy.sh
+          else
+            echo "Deploy script not found, deploying React build directly..."
+            
+            # Build React app if needed
+            if [ -d "assets/design" ]; then
+              cd assets/design
+              npm install
+              npm run build
+              cd ../..
+              
+              # Copy build files to public_html
+              if [ -d "assets/design/build" ]; then
+                cp -r assets/design/build/* public_html/
+                echo "React app deployed successfully!"
+              else
+                echo "Build failed - no build directory found"
+              fi
+            else
+              echo "No React project found"
+            fi
+          fi
 
     - name: Verify deployment
       run: |
