@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "live-server --port=3000 --open=/",
     "build": "echo 'Static site - no build required'",
-    "deploy": "powershell -ExecutionPolicy Bypass -File deploy-new-frontend.ps1"
+    "deploy": "powershell -ExecutionPolicy Bypass -File deploy-new-frontend.ps1",
+    "health": "echo 'Health check endpoint available at /health.html'",
+    "test": "echo 'Static site - no tests required'"
   },
   "keywords": [
     "restaurant",
@@ -22,6 +24,8 @@
   },
   "dependencies": {},
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   }
 }
+
+

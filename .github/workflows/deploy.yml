@@ -8,57 +8,62 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.CLOUDWAYS_SSH_KEY }}" > ~/.ssh/cloudways_key
+        chmod 600 ~/.ssh/cloudways_key
+        ssh-keyscan -H ${{ secrets.CLOUDWAYS_SSH_HOST }} >> ~/.ssh/known_hosts
+
     - name: Deploy to Cloudways
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.CLOUDWAYS_SSH_HOST }}
-        username: ${{ secrets.CLOUDWAYS_SSH_USER }}
-        password: ${{ secrets.CLOUDWAYS_SSH_PASS }}
-        port: 22
-        script: |
-          echo "=== DEPLOYMENT DEBUG INFO ==="
+      run: |
+        ssh -i ~/.ssh/cloudways_key -o StrictHostKeyChecking=no ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }} << 'EOF'
+          set -e
+          echo "=== DEPLOYMENT STARTED ==="
+          echo "Timestamp: $(date)"
           echo "Current user: $(whoami)"
           echo "Current directory: $(pwd)"
-          echo "Home directory: $HOME"
           echo "Available space: $(df -h . | tail -1)"
           
+          # Navigate to app directory
           cd ~/applications/ygrswjnpmw
           echo "App directory: $(pwd)"
-          echo "Directory contents before:"
-          ls -la
           
-          # If repository doesn't exist, clone it
-          if [ ! -d ".git" ]; then
-            echo "Repository not found, cloning..."
-            # Create a separate directory for our code
-            mkdir -p website_code
-            cd website_code
-            git clone https://github.com/sosilans/NEWDariasItalianKitchen4.git .
-            cd ..
+          # Create backup of current deployment
+          if [ -d "public_html" ] && [ "$(ls -A public_html)" ]; then
+            echo "Creating backup..."
+            mkdir -p backups
+            cp -r public_html backups/backup_$(date +%Y%m%d_%H%M%S)
+            echo "Backup created"
+          fi
+          
+          # Clone or update repository
+          if [ ! -d "website_code" ]; then
+            echo "Cloning repository..."
+            git clone https://github.com/sosilans/NEWDariasItalianKitchen4.git website_code
           else
-            echo "Repository exists, pulling latest changes..."
+            echo "Updating repository..."
             cd website_code
-            git pull origin main || git pull origin master
+            git fetch origin
+            git reset --hard origin/main || git reset --hard origin/master
             cd ..
           fi
           
-          echo "Directory contents after git:"
-          ls -la
-          
-          # Check for NEW_FRONTEND directory
+          # Deploy NEW_FRONTEND if exists
           if [ -d "website_code/NEW_FRONTEND" ]; then
-            echo "Found NEW_FRONTEND directory, deploying..."
+            echo "Deploying NEW_FRONTEND..."
             
-            # Clear public_html first
+            # Clear public_html
             rm -rf public_html/*
             
-            # Copy all files from NEW_FRONTEND (except README and scripts)
-            find website_code/NEW_FRONTEND -type f ! -name "README.md" ! -name "*.ps1" -exec cp {} public_html/ \;
+            # Copy files (excluding README and scripts)
+            find website_code/NEW_FRONTEND -type f ! -name "README.md" ! -name "*.ps1" ! -name "*.md" -exec cp {} public_html/ \;
             
             # Copy directories
             for dir in website_code/NEW_FRONTEND/*/; do
@@ -68,23 +73,61 @@ jobs:
               fi
             done
             
-            # Set proper permissions for web access
+            # Set proper permissions
             chmod -R 755 public_html/
             find public_html/ -type f -exec chmod 644 {} \;
             
-            echo "=== NEW FRONTEND DEPLOYED ==="
+            echo "=== DEPLOYMENT COMPLETED ==="
+            echo "Files deployed:"
             ls -la public_html/
             
           else
-            echo "No NEW_FRONTEND directory found, keeping placeholder..."
-            echo "To deploy new frontend:"
-            echo "1. Add files to NEW_FRONTEND/ directory"
-            echo "2. Push to GitHub"
-            echo "3. Deployment will happen automatically"
+            echo "No NEW_FRONTEND directory found"
+            exit 1
           fi
+        EOF
 
-    - name: Verify deployment
+    - name: Health Check
       run: |
-        echo "Deployment completed. Checking site status..."
-        sleep 30
-        curl -f https://phpstack-1511050-5820602.cloudwaysapps.com/ || echo "Site may still be deploying..."
+        echo "Waiting for deployment to stabilize..."
+        sleep 10
+        
+        # Test site availability
+        for i in {1..5}; do
+          if curl -f -s --max-time 10 https://phpstack-1511050-5820602.cloudwaysapps.com/ > /dev/null; then
+            echo "✅ Site is responding"
+            break
+          else
+            echo "⏳ Attempt $i/5: Site not responding yet..."
+            sleep 10
+          fi
+        done
+        
+        # Final verification
+        if curl -f -s --max-time 10 https://phpstack-1511050-5820602.cloudwaysapps.com/ > /dev/null; then
+          echo "🎉 Deployment successful!"
+        else
+          echo "❌ Deployment failed - site not responding"
+          exit 1
+        fi
+
+    - name: Rollback on Failure
+      if: failure()
+      run: |
+        echo "Deployment failed, attempting rollback..."
+        ssh -i ~/.ssh/cloudways_key -o StrictHostKeyChecking=no ${{ secrets.CLOUDWAYS_SSH_USER }}@${{ secrets.CLOUDWAYS_SSH_HOST }} << 'EOF'
+          cd ~/applications/ygrswjnpmw
+          
+          # Find latest backup
+          LATEST_BACKUP=$(ls -t backups/ | head -1)
+          if [ -n "$LATEST_BACKUP" ]; then
+            echo "Rolling back to: $LATEST_BACKUP"
+            rm -rf public_html/*
+            cp -r "backups/$LATEST_BACKUP"/* public_html/
+            chmod -R 755 public_html/
+            find public_html/ -type f -exec chmod 644 {} \;
+            echo "Rollback completed"
+          else
+            echo "No backup found for rollback"
+          fi
+        EOF

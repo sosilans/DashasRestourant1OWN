@@ -1,9 +1,18 @@
 # Deploy new frontend template to Dar'ya's Kitchen
-$server = "143.110.155.248"
-$user = "master_znmnwmhwkc"
-$password = "pXhkDa6keQh7"
+# SECURITY: Use environment variables or SSH keys instead of hardcoded passwords
+$server = $env:CLOUDWAYS_SERVER ?? "143.110.155.248"
+$user = $env:CLOUDWAYS_USER ?? "master_znmnwmhwkc"
+$sshKey = $env:CLOUDWAYS_SSH_KEY ?? "~/.ssh/cloudways_deploy_key"
 $localPath = "NEW_FRONTEND"
 $remotePath = "~/applications/ygrswjnpmw/public_html"
+
+# Check if SSH key exists
+if (!(Test-Path $sshKey)) {
+    Write-Host "SSH key not found at: $sshKey" -ForegroundColor Red
+    Write-Host "Please set CLOUDWAYS_SSH_KEY environment variable or create SSH key" -ForegroundColor Yellow
+    Write-Host "See SSH_SETUP_INSTRUCTIONS.md for details" -ForegroundColor Gray
+    exit 1
+}
 
 Write-Host "=== DEPLOYING NEW FRONTEND TEMPLATE ===" -ForegroundColor Green
 Write-Host ""
@@ -32,13 +41,13 @@ try {
     # Upload all files except README and this script
     Get-ChildItem $localPath -File | Where-Object { $_.Name -ne "README.md" -and $_.Name -ne "deploy-new-frontend.ps1" } | ForEach-Object {
         Write-Host "Uploading: $($_.Name)" -ForegroundColor Cyan
-        & scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $_.FullName "${user}@${server}:${remotePath}/"
+        & scp -i $sshKey -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $_.FullName "${user}@${server}:${remotePath}/"
     }
     
     # Upload directories
     Get-ChildItem $localPath -Directory | ForEach-Object {
         Write-Host "Uploading directory: $($_.Name)" -ForegroundColor Cyan
-        & scp -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $_.FullName "${user}@${server}:${remotePath}/"
+        & scp -i $sshKey -r -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $_.FullName "${user}@${server}:${remotePath}/"
     }
 
     Write-Host ""
@@ -55,3 +64,5 @@ try {
 } catch {
     Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
 }
+
+
