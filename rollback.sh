@@ -16,11 +16,14 @@ echo ""
 
 # SSH connection details (from secrets)
 SSH_HOST="143.110.155.248"
-SSH_USER="master_znmnwmhwkc"
+SSH_USER="silans"
+SSH_PASS="GameManPlay1337!"
 
 echo "Connecting to server..."
-ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
-  cd ~/applications/ygrswjnpmw
+sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
+  # Find the correct application directory
+  APP_DIR=\$(ls -d ~/applications/*/ | head -1)
+  cd "\$APP_DIR"
   
   if [ "$BACKUP_NAME" = "latest" ]; then
     # Find latest backup
