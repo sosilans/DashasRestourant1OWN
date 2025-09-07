@@ -42,12 +42,17 @@ jobs:
           cd "$APP_DIR"
           echo "App directory: $(pwd)"
           
+          # Check permissions and try to fix if possible
+          echo "Checking permissions..."
+          ls -la
+          
           # Create backup of current deployment
           if [ -d "public_html" ] && [ "$(ls -A public_html)" ]; then
             echo "Creating backup..."
-            mkdir -p backups
-            cp -r public_html backups/backup_$(date +%Y%m%d_%H%M%S)
-            echo "Backup created"
+            # Create backup in home directory where we have write permissions
+            mkdir -p ~/deployment_backups
+            cp -r public_html ~/deployment_backups/backup_$(date +%Y%m%d_%H%M%S)
+            echo "Backup created in ~/deployment_backups/"
           fi
           
           # Clone or update repository
@@ -128,11 +133,11 @@ jobs:
           cd "$APP_DIR"
           
           # Find latest backup
-          LATEST_BACKUP=$(ls -t backups/ | head -1)
+          LATEST_BACKUP=$(ls -t ~/deployment_backups/ | head -1)
           if [ -n "$LATEST_BACKUP" ]; then
             echo "Rolling back to: $LATEST_BACKUP"
             rm -rf public_html/*
-            cp -r "backups/$LATEST_BACKUP"/* public_html/
+            cp -r "~/deployment_backups/$LATEST_BACKUP"/* public_html/
             chmod -R 755 public_html/
             find public_html/ -type f -exec chmod 644 {} \;
             echo "Rollback completed"

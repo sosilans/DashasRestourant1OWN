@@ -27,7 +27,7 @@ sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EO
   
   if [ "$BACKUP_NAME" = "latest" ]; then
     # Find latest backup
-    LATEST_BACKUP=\$(ls -t backups/ 2>/dev/null | head -1)
+    LATEST_BACKUP=\$(ls -t ~/deployment_backups/ 2>/dev/null | head -1)
     if [ -z "\$LATEST_BACKUP" ]; then
       echo "❌ No backups found!"
       exit 1
@@ -35,10 +35,10 @@ sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EO
     BACKUP_NAME="\$LATEST_BACKUP"
   fi
   
-  if [ ! -d "backups/\$BACKUP_NAME" ]; then
+  if [ ! -d "~/deployment_backups/\$BACKUP_NAME" ]; then
     echo "❌ Backup '\$BACKUP_NAME' not found!"
     echo "Available backups:"
-    ls -la backups/ 2>/dev/null || echo "No backups directory"
+    ls -la ~/deployment_backups/ 2>/dev/null || echo "No backups directory"
     exit 1
   fi
   
@@ -48,7 +48,7 @@ sshpass -p "$SSH_PASS" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EO
   rm -rf public_html/*
   
   # Restore from backup
-  cp -r "backups/\$BACKUP_NAME"/* public_html/
+  cp -r "~/deployment_backups/\$BACKUP_NAME"/* public_html/
   
   # Set proper permissions
   chmod -R 755 public_html/
