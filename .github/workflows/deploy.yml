@@ -56,12 +56,12 @@ jobs:
           fi
           
           # Clone or update repository in home directory
-          if [ ! -d "~/website_code" ]; then
+          if [ ! -d "/home/master/website_code" ]; then
             echo "Cloning repository..."
-            git clone https://github.com/sosilans/DashasRestourant1OWN.git ~/website_code
+            git clone https://github.com/sosilans/DashasRestourant1OWN.git /home/master/website_code
           else
-            echo "Updating repository..."
-            cd ~/website_code
+            echo "Updating existing repository..."
+            cd /home/master/website_code
             git fetch origin
             git reset --hard origin/main || git reset --hard origin/master
             cd "$APP_DIR"
