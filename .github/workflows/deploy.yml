@@ -55,30 +55,30 @@ jobs:
             echo "Backup created in ~/deployment_backups/"
           fi
           
-          # Clone or update repository
-          if [ ! -d "website_code" ]; then
+          # Clone or update repository in home directory
+          if [ ! -d "~/website_code" ]; then
             echo "Cloning repository..."
-            git clone https://github.com/sosilans/DashasRestourant1OWN.git website_code
+            git clone https://github.com/sosilans/DashasRestourant1OWN.git ~/website_code
           else
             echo "Updating repository..."
-            cd website_code
+            cd ~/website_code
             git fetch origin
             git reset --hard origin/main || git reset --hard origin/master
-            cd ..
+            cd "$APP_DIR"
           fi
           
           # Deploy NEW_FRONTEND if exists
-          if [ -d "website_code/NEW_FRONTEND" ]; then
+          if [ -d "~/website_code/NEW_FRONTEND" ]; then
             echo "Deploying NEW_FRONTEND..."
             
             # Clear public_html
             rm -rf public_html/*
             
             # Copy files (excluding README and scripts)
-            find website_code/NEW_FRONTEND -type f ! -name "README.md" ! -name "*.ps1" ! -name "*.md" -exec cp {} public_html/ \;
+            find ~/website_code/NEW_FRONTEND -type f ! -name "README.md" ! -name "*.ps1" ! -name "*.md" -exec cp {} public_html/ \;
             
             # Copy directories
-            for dir in website_code/NEW_FRONTEND/*/; do
+            for dir in ~/website_code/NEW_FRONTEND/*/; do
               if [ -d "$dir" ]; then
                 dirname=$(basename "$dir")
                 cp -r "$dir" public_html/
@@ -94,7 +94,9 @@ jobs:
             ls -la public_html/
             
           else
-            echo "No NEW_FRONTEND directory found"
+            echo "No NEW_FRONTEND directory found in ~/website_code/"
+            echo "Repository contents:"
+            ls -la ~/website_code/ 2>/dev/null || echo "Repository not found"
             exit 1
           fi
         EOF
