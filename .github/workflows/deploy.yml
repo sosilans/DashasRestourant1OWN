@@ -46,7 +46,7 @@ jobs:
           # Clone or update repository
           if [ ! -d "website_code" ]; then
             echo "Cloning repository..."
-            git clone https://github.com/sosilans/NEWDariasItalianKitchen4.git website_code
+            git clone https://github.com/sosilans/DashasRestourant1OWN.git website_code
           else
             echo "Updating repository..."
             cd website_code
